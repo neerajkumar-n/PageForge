@@ -62,8 +62,8 @@ export function IntakeForm() {
     try {
       const context = form as BusinessContext
       setContext(context)
-      setStep('research')
-      router.push('/builder/research')
+      setStep('running-agents')
+      router.push('/builder/hub')
     } catch {
       toast.error('Something went wrong. Please try again.')
       setSubmitting(false)
