@@ -22,6 +22,23 @@ export interface BusinessContext {
   existingCopyExamples?: string
 }
 
+// ── Research Agent ────────────────────────────────────────
+
+export interface ResearchMessage {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+export interface ResearchOutput {
+  researchBrief: string           // Synthesized brief fed to all downstream agents
+  competitorInsights: string[]    // Key competitor differentiators found
+  audienceInsights: string[]      // Deep ICP insights beyond intake form
+  uniqueAngles: string[]          // Positioning angles to explore in messaging
+  marketContext: string           // Industry/market background
+  filesProcessed: string[]        // Names of files/URLs that were analyzed
+  conversationHistory: ResearchMessage[]
+}
+
 // ── Agent Outputs ─────────────────────────────────────────
 
 export interface ValueProp {
@@ -103,6 +120,11 @@ export interface SEOOutput {
   h1: string
   keywords: string[]
   schemaType: string
+  ogTitle: string
+  ogDescription: string
+  focusKeyword: string
+  secondaryKeywords: string[]
+  schemaMarkup: Record<string, unknown>
 }
 
 export interface QAIssue {
@@ -134,18 +156,22 @@ export type SectionType =
 
 export type PipelineStep =
   | 'intake'
+  | 'research'
   | 'running-agents'
   | 'messaging-review'
   | 'copy-review'
   | 'design-review'
+  | 'seo-review'
   | 'building'
   | 'preview'
   | 'complete'
 
 export interface AgentStatus {
+  research: 'idle' | 'running' | 'done' | 'error' | 'skipped'
   messaging: 'idle' | 'running' | 'done' | 'error'
   copy: 'idle' | 'running' | 'done' | 'error'
   design: 'idle' | 'running' | 'done' | 'error'
+  seo: 'idle' | 'running' | 'done' | 'error'
   qa: 'idle' | 'running' | 'done' | 'error'
 }
 
@@ -153,7 +179,7 @@ export interface AgentStatus {
 
 export interface FeedbackEntry {
   timestamp: string
-  gate: 'messaging' | 'copy' | 'design' | 'final'
+  gate: 'messaging' | 'copy' | 'design' | 'seo' | 'final'
   field: string
   original: string
   revised: string
@@ -178,6 +204,7 @@ export interface PipelineSession {
   createdAt: string
   currentStep: PipelineStep
   context: BusinessContext | null
+  research: ResearchOutput | null
   agentStatus: AgentStatus
   messaging: MessagingOutput | null
   copy: CopyOutput | null

@@ -5,17 +5,20 @@ import type { PipelineStep } from '@/types'
 
 const STEPS: { id: PipelineStep; label: string }[] = [
   { id: 'intake', label: 'Intake' },
+  { id: 'research', label: 'Research' },
   { id: 'running-agents', label: 'AI Agents' },
   { id: 'messaging-review', label: 'Messaging' },
   { id: 'copy-review', label: 'Copy' },
   { id: 'design-review', label: 'Design' },
+  { id: 'seo-review', label: 'SEO' },
   { id: 'preview', label: 'Preview' },
 ]
 
 const STEP_ORDER = STEPS.map((s) => s.id)
 
 function getStepIndex(step: PipelineStep): number {
-  return STEP_ORDER.indexOf(step)
+  const idx = STEP_ORDER.indexOf(step)
+  return idx >= 0 ? idx : 0
 }
 
 export function StepProgress() {
@@ -33,7 +36,7 @@ export function StepProgress() {
             <div className="flex flex-col items-center gap-1">
               <div
                 className={[
-                  'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all',
+                  'w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all',
                   status === 'done'
                     ? 'bg-indigo-600 text-white'
                     : status === 'active'
@@ -41,11 +44,11 @@ export function StepProgress() {
                     : 'bg-gray-100 border border-gray-300 text-gray-400',
                 ].join(' ')}
               >
-                {status === 'done' ? <Check size={14} /> : <span>{i + 1}</span>}
+                {status === 'done' ? <Check size={12} /> : <span>{i + 1}</span>}
               </div>
               <span
                 className={[
-                  'text-xs whitespace-nowrap hidden sm:block',
+                  'text-xs whitespace-nowrap hidden lg:block',
                   status === 'active'
                     ? 'text-indigo-600 font-semibold'
                     : status === 'done'
@@ -60,7 +63,7 @@ export function StepProgress() {
             {i < STEPS.length - 1 && (
               <div
                 className={[
-                  'h-0.5 w-8 sm:w-14 mx-1 transition-all',
+                  'h-0.5 w-4 sm:w-8 mx-1 transition-all',
                   i < currentIndex ? 'bg-indigo-600' : 'bg-gray-200',
                 ].join(' ')}
               />

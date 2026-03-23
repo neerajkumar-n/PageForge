@@ -6,7 +6,7 @@ import { AgentStatusBoard } from '@/components/builder/AgentStatusBoard'
 
 export default function RunningPage() {
   const router = useRouter()
-  const { context, setAgentStatus, setMessaging, setCopy, setDesign, setQA, setSEO } = usePipelineStore()
+  const { context, research, setAgentStatus, setMessaging, setCopy, setDesign, setQA, setSEO } = usePipelineStore()
   const hasStarted = useRef(false)
 
   useEffect(() => {
@@ -24,6 +24,7 @@ export default function RunningPage() {
         body: JSON.stringify({
           context,
           feedbackLog: usePipelineStore.getState().feedbackLog,
+          research: research ?? undefined,
         }),
       })
 
@@ -67,7 +68,7 @@ export default function RunningPage() {
     }
 
     runAgents().catch(console.error)
-  }, [context, router, setAgentStatus, setMessaging, setCopy, setDesign, setQA, setSEO])
+  }, [context, research, router, setAgentStatus, setMessaging, setCopy, setDesign, setQA, setSEO])
 
   return <AgentStatusBoard />
 }

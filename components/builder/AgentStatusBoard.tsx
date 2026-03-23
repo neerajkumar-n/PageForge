@@ -6,16 +6,20 @@ import { CheckCircle, XCircle, Loader2, Circle } from 'lucide-react'
 import { usePipelineStore } from '@/lib/store/pipeline'
 import type { AgentStatus } from '@/types'
 
+type AgentKey = keyof AgentStatus
+
 const AGENTS: {
-  key: keyof AgentStatus
+  key: AgentKey
   label: string
   description: string
-  dependsOn?: keyof AgentStatus
+  dependsOn?: AgentKey
+  badge?: string
 }[] = [
   {
     key: 'messaging',
     label: 'Messaging Agent',
     description: 'Analyzing your ICP and competitive positioning to build a defensible messaging hierarchy...',
+    badge: 'Parallel',
   },
   {
     key: 'copy',
@@ -27,6 +31,7 @@ const AGENTS: {
     key: 'design',
     label: 'Design Agent',
     description: 'Generating 3 distinct visual design directions with palettes, typography, and layout recommendations...',
+    badge: 'Parallel',
   },
   {
     key: 'qa',
@@ -36,18 +41,26 @@ const AGENTS: {
   },
 ]
 
-function StatusIcon({ status }: { status: AgentStatus[keyof AgentStatus] }) {
+function StatusIcon({ status }: { status: AgentStatus[AgentKey] }) {
   if (status === 'running') return <Loader2 className="animate-spin text-indigo-500" size={24} />
   if (status === 'done') return <CheckCircle className="text-green-500" size={24} />
   if (status === 'error') return <XCircle className="text-red-500" size={24} />
   return <Circle className="text-gray-300" size={24} />
 }
 
-function statusLabel(status: AgentStatus[keyof AgentStatus]): string {
+function statusLabel(status: AgentStatus[AgentKey]): string {
   if (status === 'idle') return 'Waiting...'
   if (status === 'running') return 'Running'
   if (status === 'done') return 'Complete'
+  if (status === 'skipped') return 'Skipped'
   return 'Error'
+}
+
+function statusClass(status: AgentStatus[AgentKey]): string {
+  if (status === 'running') return 'bg-indigo-100 text-indigo-700'
+  if (status === 'done') return 'bg-green-100 text-green-700'
+  if (status === 'error') return 'bg-red-100 text-red-700'
+  return 'bg-gray-100 text-gray-500'
 }
 
 export function AgentStatusBoard() {
@@ -73,7 +86,7 @@ export function AgentStatusBoard() {
   return (
     <div className="max-w-2xl mx-auto space-y-4">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">AI agents are building your page</h1>
+        <h1 className="text-2xl font-bold text-gray-900">AI agents are building your page</h1>
         <p className="text-gray-500">This takes 20–40 seconds. You'll review everything before anything goes live.</p>
       </div>
 
@@ -98,14 +111,18 @@ export function AgentStatusBoard() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
-                <p className="font-semibold text-gray-900">{agent.label}</p>
-                <span className={[
-                  'text-xs font-medium px-2 py-0.5 rounded-full',
-                  status === 'running' ? 'bg-indigo-100 text-indigo-700' : '',
-                  status === 'done' ? 'bg-green-100 text-green-700' : '',
-                  status === 'error' ? 'bg-red-100 text-red-700' : '',
-                  status === 'idle' ? 'bg-gray-100 text-gray-500' : '',
-                ].join(' ')}>
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold text-gray-900">{agent.label}</p>
+                  {agent.badge && (
+                    <span className="text-xs bg-violet-100 text-violet-600 px-1.5 py-0.5 rounded font-medium">
+                      {agent.badge}
+                    </span>
+                  )}
+                  {agent.dependsOn && (
+                    <span className="text-xs text-gray-400">↳ after {agent.dependsOn}</span>
+                  )}
+                </div>
+                <span className={['text-xs font-medium px-2 py-0.5 rounded-full', statusClass(status)].join(' ')}>
                   {statusLabel(status)}
                 </span>
               </div>
