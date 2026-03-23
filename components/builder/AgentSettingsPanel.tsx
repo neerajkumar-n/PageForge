@@ -9,9 +9,11 @@ import { Textarea } from '@/components/ui/Textarea'
 import type { AgentConfigs } from '@/config/ai.config'
 
 const AGENT_LABELS: Record<keyof AgentConfigs, { label: string; desc: string; color: string }> = {
+  research: { label: 'Research Agent', desc: 'Context gathering & competitive intelligence', color: 'indigo' },
   messaging: { label: 'Messaging Agent', desc: 'Headlines, value props, positioning', color: 'purple' },
   copy: { label: 'Copy Agent', desc: 'Full section copy', color: 'blue' },
   design: { label: 'Design Agent', desc: 'Palettes, typography, layout', color: 'green' },
+  seo: { label: 'SEO Agent', desc: 'Meta tags, schema, keyword strategy', color: 'teal' },
   qa: { label: 'QA Agent', desc: 'CRO audit & scoring', color: 'amber' },
 }
 

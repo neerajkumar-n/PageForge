@@ -27,13 +27,18 @@ export function exportToHTML(
 
   const sectionsHTML = sections.map((s) => renderSectionHTML(s, dir.palette)).join('\n\n')
 
-  const schemaOrgLD = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': seo.schemaType,
-    name: seo.pageTitle,
-    description: seo.metaDescription,
-    keywords: seo.keywords.join(', '),
-  })
+  const schemaOrgLD = seo.schemaMarkup
+    ? JSON.stringify(seo.schemaMarkup)
+    : JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': seo.schemaType,
+        name: seo.pageTitle,
+        description: seo.metaDescription,
+        keywords: seo.keywords.join(', '),
+      })
+
+  const ogTitle = seo.ogTitle || seo.pageTitle
+  const ogDescription = seo.ogDescription || seo.metaDescription
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -45,14 +50,14 @@ export function exportToHTML(
   <meta name="keywords" content="${escapeHTML(seo.keywords.join(', '))}" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="${escapeHTML(seo.pageTitle)}" />
-  <meta property="og:description" content="${escapeHTML(seo.metaDescription)}" />
+  <meta property="og:title" content="${escapeHTML(ogTitle)}" />
+  <meta property="og:description" content="${escapeHTML(ogDescription)}" />
   <meta property="og:type" content="website" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="${escapeHTML(seo.pageTitle)}" />
-  <meta name="twitter:description" content="${escapeHTML(seo.metaDescription)}" />
+  <meta name="twitter:title" content="${escapeHTML(ogTitle)}" />
+  <meta name="twitter:description" content="${escapeHTML(ogDescription)}" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />

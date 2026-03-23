@@ -417,5 +417,36 @@ export function mockSEO(context: BusinessContext): SEOOutput {
       'sales prediction AI',
     ],
     schemaType: 'SoftwareApplication',
+    ogTitle: 'Know which deals will close — 3 weeks before your reps do | Clairo',
+    ogDescription:
+      'Clairo analyzes 140+ deal signals to give revenue leaders a forecast they can stake their quarter on. Join 340+ mid-market revenue teams.',
+    focusKeyword: 'sales forecasting software',
+    secondaryKeywords: [
+      'AI revenue intelligence',
+      'RevOps forecasting tool',
+      'deal risk detection software',
+      'sales pipeline analytics',
+    ],
+    schemaMarkup: {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: context.productName,
+      applicationCategory: 'BusinessApplication',
+      description: 'AI-powered sales forecasting platform for mid-market revenue teams',
+      url: context.ctaUrl,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          description: 'Contact for pricing',
+        },
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: context.companyName,
+      },
+    },
   }
 }

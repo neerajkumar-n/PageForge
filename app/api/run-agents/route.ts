@@ -3,22 +3,25 @@ import { runMessagingAgent } from '@/lib/agents/messaging'
 import { runCopyAgent } from '@/lib/agents/copy'
 import { runDesignAgent } from '@/lib/agents/design'
 import { runQAAgent } from '@/lib/agents/qa'
-import type { BusinessContext, FeedbackEntry, MessagingOutput, CopyOutput, DesignOutput } from '@/types'
+import type { BusinessContext, FeedbackEntry, MessagingOutput, CopyOutput, DesignOutput, ResearchOutput } from '@/types'
 
 interface RunAgentsRequest {
   context: BusinessContext
   feedbackLog: FeedbackEntry[]
+  research?: ResearchOutput
   characteristicOverrides?: Record<string, unknown>
 }
 
 export async function POST(req: NextRequest) {
   let context: BusinessContext
   let feedbackLog: FeedbackEntry[]
+  let research: ResearchOutput | undefined
 
   try {
     const body: RunAgentsRequest = await req.json()
     context = body.context
     feedbackLog = body.feedbackLog ?? []
+    research = body.research ?? undefined
   } catch {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
@@ -29,6 +32,25 @@ export async function POST(req: NextRequest) {
     const payload = JSON.stringify({ agent, status, ...(data ? { data } : {}) })
     return encoder.encode(`data: ${payload}\n\n`)
   }
+
+  // Append research brief to business context description for downstream agents
+  const enrichedContext: BusinessContext = research
+    ? {
+        ...context,
+        productDescription: `${context.productDescription}\n\n[RESEARCH BRIEF]\n${research.researchBrief}`,
+        existingCopyExamples: [
+          context.existingCopyExamples,
+          research.competitorInsights.length > 0
+            ? `COMPETITOR INSIGHTS:\n${research.competitorInsights.join('\n')}`
+            : '',
+          research.audienceInsights.length > 0
+            ? `AUDIENCE INSIGHTS:\n${research.audienceInsights.join('\n')}`
+            : '',
+        ]
+          .filter(Boolean)
+          .join('\n\n'),
+      }
+    : context
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -42,11 +64,11 @@ export async function POST(req: NextRequest) {
         controller.enqueue(event('design', 'running'))
 
         const [messagingResult, designResult] = await Promise.all([
-          runMessagingAgent(context).then((result) => {
+          runMessagingAgent(enrichedContext).then((result) => {
             controller.enqueue(event('messaging', 'done', result))
             return result
           }),
-          runDesignAgent(context).then((result) => {
+          runDesignAgent(enrichedContext).then((result) => {
             controller.enqueue(event('design', 'done', result))
             return result
           }),
@@ -57,12 +79,12 @@ export async function POST(req: NextRequest) {
 
         // ── Copy runs after messaging ────────────────────
         controller.enqueue(event('copy', 'running'))
-        copy = await runCopyAgent(context, messaging, feedbackLog)
+        copy = await runCopyAgent(enrichedContext, messaging, feedbackLog)
         controller.enqueue(event('copy', 'done', copy))
 
         // ── QA runs last ─────────────────────────────────
         controller.enqueue(event('qa', 'running'))
-        const qa = await runQAAgent(context, messaging, copy, design)
+        const qa = await runQAAgent(enrichedContext, messaging, copy, design)
         controller.enqueue(event('qa', 'done', qa))
 
         controller.enqueue(event('complete', 'done'))

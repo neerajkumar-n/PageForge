@@ -6,6 +6,7 @@ import type {
   PipelineSession,
   PipelineStep,
   BusinessContext,
+  ResearchOutput,
   MessagingOutput,
   CopyOutput,
   DesignOutput,
@@ -29,10 +30,13 @@ function createDefaultSession(): PipelineSession {
     createdAt: new Date().toISOString(),
     currentStep: 'intake',
     context: null,
+    research: null,
     agentStatus: {
+      research: 'idle',
       messaging: 'idle',
       copy: 'idle',
       design: 'idle',
+      seo: 'idle',
       qa: 'idle',
     },
     messaging: null,
@@ -52,6 +56,9 @@ interface PipelineStore extends PipelineSession {
 
   // Intake
   setContext: (ctx: BusinessContext) => void
+
+  // Research
+  setResearch: (data: ResearchOutput) => void
 
   // Agent status
   setAgentStatus: (agent: keyof AgentStatus, status: AgentStatus[keyof AgentStatus]) => void
@@ -77,6 +84,9 @@ interface PipelineStore extends PipelineSession {
   reorderSections: (order: SectionType[]) => void
   toggleSection: (sectionType: SectionType) => void
   setComponentVariant: (sectionType: SectionType, variant: string) => void
+
+  // SEO gate edits
+  updateSEOField: (field: keyof SEOOutput, value: unknown) => void
 
   // Feedback log
   logFeedback: (entry: Omit<FeedbackEntry, 'timestamp'>) => void
@@ -113,6 +123,10 @@ export const usePipelineStore = create<PipelineStore>()(
       // ── Intake ──────────────────────────────────────────
 
       setContext: (ctx) => set({ context: ctx }),
+
+      // ── Research ────────────────────────────────────────
+
+      setResearch: (data) => set({ research: data }),
 
       // ── Agent Status ────────────────────────────────────
 
@@ -240,6 +254,14 @@ export const usePipelineStore = create<PipelineStore>()(
           }
         }),
 
+      // ── SEO Gate Edits ──────────────────────────────────
+
+      updateSEOField: (field, value) =>
+        set((state) => {
+          if (!state.seo) return state
+          return { seo: { ...state.seo, [field]: value } }
+        }),
+
       // ── Feedback Log ────────────────────────────────────
 
       logFeedback: (entry) =>
@@ -305,7 +327,7 @@ export const usePipelineStore = create<PipelineStore>()(
     }),
     {
       name: 'pageforge-pipeline',
-      version: 1,
+      version: 2,
     }
   )
 )
