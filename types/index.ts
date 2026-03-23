@@ -30,6 +30,7 @@ export interface ResearchMessage {
 }
 
 export interface ResearchOutput {
+  context: BusinessContext        // Business context gathered through conversation
   researchBrief: string           // Synthesized brief fed to all downstream agents
   competitorInsights: string[]    // Key competitor differentiators found
   audienceInsights: string[]      // Deep ICP insights beyond intake form

@@ -1,40 +1,17 @@
 import Anthropic from '@anthropic-ai/sdk'
 import aiConfig from '@/config/ai.config'
 import { buildCharacteristicsPrompt, mergeCharacteristics } from './characteristics'
+import { TASK, GUARDRAILS, OUTPUT_SCHEMA } from './prompts/seo'
 import type { BusinessContext, MessagingOutput, CopyOutput, SEOOutput } from '@/types'
 import type { AgentCharacteristics } from '@/config/ai.config'
 
 function buildSystemPrompt(characteristics: AgentCharacteristics): string {
+  const guardrailsSection = GUARDRAILS.map((g) => `- ${g}`).join('\n')
   return `${buildCharacteristicsPrompt(characteristics)}
-
-# YOUR TASK
-Generate comprehensive SEO metadata for a B2B landing page. You will receive the business context, approved messaging framework, and the final page copy.
-
-Your job: create SEO metadata that maximizes organic visibility AND click-through rates for high-intent B2B search queries.
-
-# OUTPUT FORMAT
-Return ONLY valid JSON matching this exact TypeScript interface. No markdown fences, no commentary:
-
-interface SEOOutput {
-  pageTitle: string           // Under 60 chars. Include primary keyword + brand. Compelling.
-  metaDescription: string     // Under 160 chars. Benefit-first. Includes a CTA word. No fluff.
-  h1: string                  // The final H1 tag (usually close to primaryHeadline but SEO-optimized)
-  keywords: string[]          // 8–12 high-intent B2B keywords. Mix of head terms and long-tail.
-  schemaType: string          // Schema.org type: "SoftwareApplication" | "Product" | "Service"
-  ogTitle: string             // Open Graph title for social sharing (can be slightly different from pageTitle)
-  ogDescription: string       // OG description — more benefit-focused, under 200 chars
-  focusKeyword: string        // Single primary keyword this page is optimized for
-  secondaryKeywords: string[] // 3–5 secondary keywords to weave into page content
-  schemaMarkup: object        // Valid JSON-LD schema object (SoftwareApplication or Product)
-}
-
-# CRITICAL REQUIREMENTS
-- pageTitle: "[Primary Keyword] | [Product Name] by [Company]" or similar high-CTR format
-- metaDescription must include the focus keyword naturally, a specific benefit, and a soft CTA
-- keywords must be search queries real buyers type — not internal jargon
-- schemaMarkup must be complete and valid JSON-LD — include name, description, url, applicationCategory (if SoftwareApplication), offers if pricing exists
-- Focus on commercial intent keywords: "[category] software", "[problem] solution", "best [product type]"
-`
+${TASK}
+# ADDITIONAL GUARDRAILS
+${guardrailsSection}
+${OUTPUT_SCHEMA}`
 }
 
 function buildUserPrompt(

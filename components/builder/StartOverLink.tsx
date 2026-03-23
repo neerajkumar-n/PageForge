@@ -8,7 +8,7 @@ export function StartOverLink() {
 
   return (
     <Link
-      href="/builder/intake"
+      href="/builder/hub"
       onClick={resetSession}
       className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
     >

@@ -10,7 +10,7 @@ import type { ResearchMessage, ResearchOutput } from '@/types'
 
 export function ResearchPanel() {
   const router = useRouter()
-  const { context, setResearch, setStep, setAgentStatus } = usePipelineStore()
+  const { context, setContext, setResearch, setStep, setAgentStatus } = usePipelineStore()
 
   const [messages, setMessages] = useState<ResearchMessage[]>([])
   const [input, setInput] = useState('')
@@ -40,7 +40,7 @@ export function ResearchPanel() {
       const res = await fetch('/api/research-agent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ context, messages: [], fileContents: [] }),
+        body: JSON.stringify({ context: context ?? null, messages: [], fileContents: [] }),
       })
       const data = await res.json()
       if (data.message) {
@@ -86,6 +86,10 @@ export function ResearchPanel() {
   }
 
   function handleComplete(output: ResearchOutput) {
+    // Persist gathered context and research to the pipeline store
+    if (output.context) {
+      setContext(output.context)
+    }
     setResearchOutput(output)
     setIsComplete(true)
   }

@@ -3,7 +3,7 @@ import { runResearchAgent } from '@/lib/agents/research'
 import type { BusinessContext, ResearchMessage } from '@/types'
 
 interface ResearchAgentRequest {
-  context: BusinessContext
+  context: BusinessContext | null
   messages: ResearchMessage[]
   fileContents?: { name: string; content: string }[]
 }
@@ -17,11 +17,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
-  const { context, messages, fileContents = [] } = body
-
-  if (!context) {
-    return NextResponse.json({ error: 'Business context is required' }, { status: 400 })
-  }
+  const { context = null, messages, fileContents = [] } = body
 
   try {
     const result = await runResearchAgent(context, messages, fileContents)
