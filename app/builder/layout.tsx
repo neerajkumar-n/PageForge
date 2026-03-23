@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { AgentSettingsPanel } from '@/components/builder/AgentSettingsPanel'
+import { StartOverLink } from '@/components/builder/StartOverLink'
 
 export default function BuilderLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -22,15 +22,7 @@ export default function BuilderLayout({ children }: { children: React.ReactNode 
 
           {/* Right side */}
           <div className="flex items-center gap-3 shrink-0">
-            <Link
-              href="/builder/intake"
-              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
-              onClick={() => {
-                // Clear session via store reset on next client navigation
-              }}
-            >
-              Start over
-            </Link>
+            <StartOverLink />
           </div>
         </div>
       </header>
