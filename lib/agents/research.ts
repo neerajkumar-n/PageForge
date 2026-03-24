@@ -2,22 +2,19 @@ import Anthropic from '@anthropic-ai/sdk'
 import aiConfig from '@/config/ai.config'
 import { buildCharacteristicsPrompt, mergeCharacteristics } from './characteristics'
 import { TASK, GUARDRAILS, OUTPUT_SCHEMA } from './prompts/research'
-import type { BusinessContext, ResearchMessage, ResearchOutput } from '@/types'
+import type { BusinessContext, ResearchBrief, ResearchMessage, ResearchOutput } from '@/types'
 import type { AgentCharacteristics } from '@/config/ai.config'
 
 function buildSystemPrompt(characteristics: AgentCharacteristics): string {
-  const characteristicsSection = buildCharacteristicsPrompt(characteristics)
   const guardrailsSection = GUARDRAILS.map((g) => `- ${g}`).join('\n')
-
-  return `${characteristicsSection}
+  return `${buildCharacteristicsPrompt(characteristics)}
 ${TASK}
-# ADDITIONAL GUARDRAILS
+# GUARDRAILS
 ${guardrailsSection}
 ${OUTPUT_SCHEMA}`
 }
 
 function buildUserPrompt(
-  context: BusinessContext | null,
   messages: ResearchMessage[],
   fileContents: { name: string; content: string }[]
 ): string {
@@ -32,33 +29,39 @@ function buildUserPrompt(
       : ''
 
   if (messages.length === 0) {
-    return `Start the research conversation. Introduce yourself in one sentence, then ask your first 2–3 questions to understand the product and business.${fileSection}`
+    return `Start the research conversation. Introduce yourself in one sentence, then ask the mandatory context questions.${fileSection}`
   }
 
-  if (context) {
-    // Legacy path: context was provided upfront (intake form flow)
-    return `# BUSINESS CONTEXT (pre-filled)
-COMPANY: ${context.companyName}
-PRODUCT: ${context.productName}
-DESCRIPTION: ${context.productDescription}
-USE CASE: ${context.useCase}
-TONE: ${context.tone}
-
-ICP:
-- Role: ${context.icp.role}
-- Company: ${context.icp.company}
-- Pain points: ${context.icp.painPoints}
-- Goals: ${context.icp.goals}
-
-COMPETITORS: ${context.competitors || 'Not specified'}
-CTA: ${context.primaryCTA} → ${context.ctaUrl}
-${context.existingCopyExamples ? `EXISTING COPY:\n${context.existingCopyExamples}` : ''}${fileSection}${historySection}
-
-Continue the research conversation based on what has been shared.`
-  }
-
-  // New path: context is gathered through conversation
   return `Continue the research conversation based on what has been shared.${fileSection}${historySection}`
+}
+
+/** Derive a flat BusinessContext from the richer ResearchBrief for downstream agents */
+function deriveBusinessContext(brief: ResearchBrief): BusinessContext {
+  const tone = (() => {
+    const level = brief.icp.sophisticationLevel
+    const size = brief.icp.companySize.toLowerCase()
+    if (size.includes('enterprise') || level === 'high') return 'enterprise' as const
+    if (brief.icp.industry.toLowerCase().includes('tech') || level === 'medium') return 'technical' as const
+    return 'startup' as const
+  })()
+
+  return {
+    companyName: brief.company.name,
+    productName: brief.company.product,
+    productDescription: brief.company.oneLiner,
+    useCase: brief.product.keyDifferentiators.join('; ') || brief.company.category,
+    icp: {
+      role: brief.icp.primaryRole,
+      company: `${brief.icp.companyType} (${brief.icp.companySize})`,
+      painPoints: brief.icp.painPoints.join(', '),
+      goals: brief.icp.goals.join(', '),
+    },
+    competitors: brief.competitive.competitors.map((c) => c.name).join(', ') || 'Unknown',
+    primaryCTA: brief.pageGoal.primaryCTA,
+    ctaUrl: brief.pageGoal.ctaUrl,
+    tone,
+    existingCopyExamples: brief.rawContext.keyPhrasesFromDocuments.join('\n') || undefined,
+  }
 }
 
 export interface ResearchAgentResponse {
@@ -68,7 +71,7 @@ export interface ResearchAgentResponse {
 }
 
 export async function runResearchAgent(
-  context: BusinessContext | null,
+  _context: BusinessContext | null,
   messages: ResearchMessage[],
   fileContents: { name: string; content: string }[] = [],
   characteristicOverrides?: Partial<AgentCharacteristics>
@@ -78,7 +81,6 @@ export async function runResearchAgent(
     characteristicOverrides ?? {}
   )
 
-  // Check if user wants to complete
   const lastUserMessage = messages.filter((m) => m.role === 'user').pop()
   const userWantsToComplete =
     lastUserMessage?.content.toLowerCase().includes('complete') ||
@@ -88,20 +90,16 @@ export async function runResearchAgent(
 
   if (aiConfig.mockMode) {
     if (userWantsToComplete) {
-      return {
-        message: '',
-        isComplete: true,
-        output: mockResearchOutput(context, messages, fileContents),
-      }
+      return { message: '', isComplete: true, output: mockResearchOutput(messages, fileContents) }
     }
     if (messages.length === 0) {
       return {
-        message: `Hi! I'm your Research Agent. I'll help you build a landing page that actually converts.\n\nTo get started, tell me:\n1. What does your product do, and who is it for?\n2. What's the main thing you want visitors to do when they land on the page?`,
+        message: `Hi! I'm your Research Agent. I'll gather everything needed to build a landing page that actually converts.\n\nTo get started, I need a few things:\n\n1. **What does your company do?** (1–3 sentences in plain English)\n2. **Who is your target customer?** (role, company size, industry)\n3. **What problem does the product solve for them?**\n4. **What's the primary action you want visitors to take?** (book a demo, start a trial, etc.)`,
         isComplete: false,
       }
     }
     return {
-      message: `Thanks for sharing that. A couple more things that will help me write sharper copy:\n\n1. Do you have specific customer metrics or case study data I can use as proof points? (e.g., "Customer X reduced Y by Z%")\n\n2. What's the single biggest objection your sales team hears before deals close?\n\nOnce you share these, I'll have enough to write a strong research brief. Type "complete" when ready.`,
+      message: `Thanks for sharing that. A few more things that will unlock sharper copy:\n\n1. Do you have any **customer quotes or testimonials** — real words from customers describing their problem or outcome?\n2. **Do you have specific numbers?** (e.g., "40% faster", "saves 6 hours/week", "3x pipeline")\n3. List **2–4 competitors**. I'll analyze their positioning so we can differentiate.\n\nAlso, do you have any **existing documentation** (product docs, sales decks, positioning guides)? If yes, please attach the file.\n\nOnce you've shared these, I'll summarize what I've gathered and confirm with you before finalizing the research brief. Type "complete" when you're ready to confirm.`,
       isComplete: false,
     }
   }
@@ -111,7 +109,7 @@ export async function runResearchAgent(
     baseURL: aiConfig.baseURL,
   })
 
-  const userPrompt = buildUserPrompt(context, messages, fileContents)
+  const userPrompt = buildUserPrompt(messages, fileContents)
 
   const response = await client.messages.create({
     model: aiConfig.model,
@@ -126,13 +124,18 @@ export async function runResearchAgent(
     .join('')
     .trim()
 
-  // Detect if agent output JSON (research complete)
+  // Detect if agent output the completion JSON
   const trimmed = text.replace(/```json|```/g, '').trim()
   if (trimmed.startsWith('{')) {
     try {
-      const output = JSON.parse(trimmed) as ResearchOutput
-      output.conversationHistory = messages
-      output.filesProcessed = fileContents.map((f) => f.name)
+      const brief = JSON.parse(trimmed) as ResearchBrief
+      const context = deriveBusinessContext(brief)
+      const output: ResearchOutput = {
+        brief,
+        context,
+        filesProcessed: fileContents.map((f) => f.name),
+        conversationHistory: messages,
+      }
       return { message: '', isComplete: true, output }
     } catch {
       // Not valid JSON — treat as conversation message
@@ -143,57 +146,88 @@ export async function runResearchAgent(
 }
 
 function mockResearchOutput(
-  context: BusinessContext | null,
   messages: ResearchMessage[],
   fileContents: { name: string; content: string }[]
 ): ResearchOutput {
-  const companyName = context?.companyName ?? 'Acme Corp'
-  const productName = context?.productName ?? 'Product'
-  const icpRole = context?.icp.role ?? 'VP of Operations'
-  const icpCompany = context?.icp.company ?? 'mid-market B2B companies'
-  const productDescription = context?.productDescription ?? 'a B2B SaaS product'
-
-  const effectiveContext: BusinessContext = context ?? {
-    companyName,
-    productName,
-    productDescription,
-    useCase: 'Helping teams work more efficiently',
-    icp: {
-      role: icpRole,
-      company: icpCompany,
-      painPoints: 'Manual processes, slow approvals, lack of visibility',
-      goals: 'Reduce operational overhead and increase team output',
+  const brief: ResearchBrief = {
+    company: {
+      name: 'Acme Corp',
+      product: 'Acme Revenue Intelligence',
+      category: 'Revenue Intelligence Software',
+      oneLiner: 'Acme Revenue Intelligence gives B2B sales teams accurate deal forecasts so they stop missing targets.',
     },
-    competitors: 'Unknown',
-    primaryCTA: 'Start free trial',
-    ctaUrl: 'https://app.example.com/signup',
-    tone: 'startup',
+    icp: {
+      primaryRole: 'VP of Sales',
+      companyType: 'B2B SaaS company',
+      companySize: '50–500 employees',
+      industry: 'Software / Technology',
+      painPoints: [
+        'Manual CRM updates mean forecast data is always stale',
+        'Deals slip through the cracks because no one knows which ones are actually at risk',
+        'Sales leaders spend 3+ hours every Monday preparing forecast reviews',
+      ],
+      goals: [
+        'Hit quarterly revenue targets consistently',
+        'Give leadership accurate pipeline visibility without manual effort',
+        'Free up rep time from admin so they can sell more',
+      ],
+      sophisticationLevel: 'medium',
+    },
+    product: {
+      coreFeatures: [
+        'AI-powered deal scoring and risk detection',
+        'Automatic CRM activity capture',
+        'Real-time pipeline health dashboard',
+        'Forecast accuracy tracking',
+      ],
+      keyDifferentiators: [
+        'No manual CRM updates required — activity captured automatically',
+        'Forecasts update in real time, not weekly',
+        'Works alongside existing CRM — no migration required',
+      ],
+      proofPoints: [
+        '40% improvement in forecast accuracy in first 90 days',
+        'Saves sales leaders 3+ hours per week on forecast prep',
+        '2x pipeline visibility without additional headcount',
+      ],
+      customerQuotes: [
+        '"We finally stopped flying blind into board meetings." — Sarah K., VP Sales, Series B startup',
+        '"Our forecast accuracy went from 60% to 94% in one quarter." — Marcus T., CRO, 200-person SaaS',
+      ],
+    },
+    competitive: {
+      competitors: [
+        { name: 'Clari', headline: 'Revenue platform for the enterprise', cta: 'Get a demo', positioning: 'Enterprise-first, broad platform' },
+        { name: 'Gong', headline: 'Revenue intelligence from your conversations', cta: 'Get a demo', positioning: 'Conversation intelligence leader' },
+        { name: 'Salesforce Einstein', headline: 'AI built into your CRM', cta: 'Try free', positioning: 'Native CRM AI' },
+      ],
+      marketGaps: [
+        'None of the major players focus on mid-market (50–500 employees) specifically',
+        'Competitors require lengthy implementations (6–12 months); fast time-to-value is unclaimed',
+        'Price transparency is absent — no competitor shows pricing publicly',
+      ],
+      overcrowdedAngles: [
+        '"AI-powered forecasting" — every competitor claims this',
+        '"Single source of truth for revenue" — overused positioning',
+      ],
+    },
+    pageGoal: {
+      primaryCTA: 'Book a 20-min demo',
+      ctaUrl: 'https://app.acme.com/demo',
+      secondaryCTA: 'See a 3-min product tour',
+    },
+    rawContext: {
+      documentsIngested: fileContents.map((f) => f.name),
+      keyPhrasesFromDocuments: fileContents.length > 0 ? ['[Extracted from attached files]'] : [],
+      contradictionsFound: [],
+    },
   }
 
+  const context = deriveBusinessContext(brief)
+
   return {
-    context: effectiveContext,
-    researchBrief: `${productName} by ${companyName} operates in a market where buyers are increasingly skeptical of generic SaaS promises. The ICP — ${icpRole} at ${icpCompany} — has been burned by tools that overpromised and underdelivered. They make purchase decisions based on peer referrals and verifiable proof, not vendor claims.\n\nThe core job-to-be-done is not just solving the stated pain point, but enabling the buyer to look competent to their leadership. This means the landing page must speak to both the rational (ROI, implementation speed) and the political (risk reduction, stakeholder buy-in).\n\nCompetitive differentiation should lean into specificity: concrete metrics, named customer archetypes, and a clearly defined ideal use case. The page should make it easy to self-qualify — helping the right prospects lean in and the wrong ones opt out.`,
-    competitorInsights: [
-      `Competitors lack depth in ${icpCompany} use cases — their messaging is too generic`,
-      'Enterprise alternatives have long onboarding cycles that lose momentum',
-      'Existing tools require heavy IT involvement that delays time-to-value',
-      'Competitor pricing models create unpredictable costs that CFOs resist',
-      'Category alternatives require manual work that this product automates',
-    ],
-    audienceInsights: [
-      `${icpRole}s are evaluated quarterly — they need wins that show up in board decks`,
-      'Primary fear: recommending a tool that their team refuses to adopt',
-      'They research 3–5 alternatives before shortlisting — trust signals matter at every touchpoint',
-      'Decision timeline is typically 30–90 days with 2–4 stakeholders involved',
-      'They prefer to start with a proof-of-concept before committing to annual contracts',
-    ],
-    uniqueAngles: [
-      `Speed-to-value: how fast can a ${icpRole} see results without IT or engineering?`,
-      'The "anti-enterprise" angle: purpose-built for their company size, not retrofitted',
-      'Risk reversal: what guarantee removes the fear of a bad recommendation?',
-      'The workflow integration story: fits into existing tools rather than replacing them',
-    ],
-    marketContext: `The ${productDescription.split(' ').slice(0, 5).join(' ')} market is seeing increased scrutiny on ROI as companies tighten budgets. Buyers are more informed and more skeptical than ever, making specificity and proof the primary conversion drivers.`,
+    brief,
+    context,
     filesProcessed: fileContents.map((f) => f.name),
     conversationHistory: messages,
   }

@@ -2,7 +2,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import aiConfig from '@/config/ai.config'
 import { mockDesign } from '@/lib/mock/fixtures'
 import { buildCharacteristicsPrompt, mergeCharacteristics } from './characteristics'
-import { TASK, DIRECTION_ARCHETYPES, COLOR_REQUIREMENTS, GUARDRAILS, OUTPUT_SCHEMA } from './prompts/design'
+import { TASK, GUARDRAILS, OUTPUT_SCHEMA } from './prompts/design'
 import type { BusinessContext, DesignOutput } from '@/types'
 import type { AgentCharacteristics } from '@/config/ai.config'
 
@@ -10,8 +10,6 @@ function buildSystemPrompt(characteristics: AgentCharacteristics): string {
   const guardrailsSection = GUARDRAILS.map((g) => `- ${g}`).join('\n')
   return `${buildCharacteristicsPrompt(characteristics)}
 ${TASK}
-${DIRECTION_ARCHETYPES}
-${COLOR_REQUIREMENTS}
 # ADDITIONAL GUARDRAILS
 ${guardrailsSection}
 ${OUTPUT_SCHEMA}`

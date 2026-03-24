@@ -14,6 +14,7 @@ export function exportToWebflow(
   return sections.map((section) => ({
     type: section.sectionType,
     slug: `${section.sectionType}-section`,
+    variant: 'default',
     content: buildContent(section),
     styles: {
       backgroundColor: getSectionBackground(section.sectionType, dir.palette),

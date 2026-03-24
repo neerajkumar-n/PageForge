@@ -37,14 +37,14 @@ export async function POST(req: NextRequest) {
   const enrichedContext: BusinessContext = research
     ? {
         ...context,
-        productDescription: `${context.productDescription}\n\n[RESEARCH BRIEF]\n${research.researchBrief}`,
+        productDescription: `${context.productDescription}\n\n[RESEARCH BRIEF]\n${research.brief.company.oneLiner}`,
         existingCopyExamples: [
           context.existingCopyExamples,
-          research.competitorInsights.length > 0
-            ? `COMPETITOR INSIGHTS:\n${research.competitorInsights.join('\n')}`
+          research.brief.competitive.marketGaps.length > 0
+            ? `COMPETITOR INSIGHTS:\n${research.brief.competitive.marketGaps.join('\n')}`
             : '',
-          research.audienceInsights.length > 0
-            ? `AUDIENCE INSIGHTS:\n${research.audienceInsights.join('\n')}`
+          research.brief.icp.painPoints.length > 0
+            ? `AUDIENCE INSIGHTS:\n${research.brief.icp.painPoints.join('\n')}`
             : '',
         ]
           .filter(Boolean)

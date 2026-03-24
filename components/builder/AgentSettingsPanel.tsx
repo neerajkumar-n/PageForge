@@ -15,6 +15,7 @@ const AGENT_LABELS: Record<keyof AgentConfigs, { label: string; desc: string; co
   design: { label: 'Design Agent', desc: 'Palettes, typography, layout', color: 'green' },
   seo: { label: 'SEO Agent', desc: 'Meta tags, schema, keyword strategy', color: 'teal' },
   qa: { label: 'QA Agent', desc: 'CRO audit & scoring', color: 'amber' },
+  builder: { label: 'Builder Agent', desc: 'Page assembly & output generation', color: 'gray' },
 }
 
 const FIELDS: { key: keyof import('@/config/ai.config').AgentCharacteristics; label: string; hint: string; multiline: boolean }[] = [

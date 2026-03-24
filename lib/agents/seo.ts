@@ -143,5 +143,12 @@ function mockSEO(context: BusinessContext, messaging: MessagingOutput): SEOOutpu
         name: context.companyName,
       },
     },
+    longTailKeywords: ['best revenue forecasting for mid-market saas', 'how to improve sales forecast accuracy'],
+    semanticKeywords: ['pipeline visibility', 'deal scoring', 'CRM integration'],
+    urlSlug: 'revenue-intelligence-for-sales-teams',
+    h2Structure: [],
+    technicalChecklist: [],
+    headHtml: '<title>Mock SEO Title</title>',
+    keywordRationale: 'Primary keyword chosen for high commercial intent.',
   }
 }
