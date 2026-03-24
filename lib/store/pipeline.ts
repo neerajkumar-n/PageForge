@@ -28,7 +28,7 @@ function createDefaultSession(): PipelineSession {
   return {
     id: generateId(),
     createdAt: new Date().toISOString(),
-    currentStep: 'intake',
+    currentStep: 'research',
     context: null,
     research: null,
     agentStatus: {

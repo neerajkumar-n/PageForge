@@ -29,13 +29,57 @@ export interface ResearchMessage {
   content: string
 }
 
+/** Rich structured research brief output by the Research Agent */
+export interface ResearchBrief {
+  company: {
+    name: string
+    product: string
+    category: string
+    oneLiner: string
+  }
+  icp: {
+    primaryRole: string
+    companyType: string
+    companySize: string
+    industry: string
+    painPoints: string[]
+    goals: string[]
+    sophisticationLevel: 'low' | 'medium' | 'high'
+  }
+  product: {
+    coreFeatures: string[]
+    keyDifferentiators: string[]
+    proofPoints: string[]
+    customerQuotes: string[]
+  }
+  competitive: {
+    competitors: Array<{
+      name: string
+      headline: string
+      cta: string
+      positioning: string
+    }>
+    marketGaps: string[]
+    overcrowdedAngles: string[]
+  }
+  pageGoal: {
+    primaryCTA: string
+    ctaUrl: string
+    secondaryCTA: string
+  }
+  rawContext: {
+    documentsIngested: string[]
+    keyPhrasesFromDocuments: string[]
+    contradictionsFound: string[]
+  }
+}
+
 export interface ResearchOutput {
-  researchBrief: string           // Synthesized brief fed to all downstream agents
-  competitorInsights: string[]    // Key competitor differentiators found
-  audienceInsights: string[]      // Deep ICP insights beyond intake form
-  uniqueAngles: string[]          // Positioning angles to explore in messaging
-  marketContext: string           // Industry/market background
-  filesProcessed: string[]        // Names of files/URLs that were analyzed
+  /** Rich structured brief from the Research Agent */
+  brief: ResearchBrief
+  /** Derived BusinessContext for backward compatibility with downstream agents */
+  context: BusinessContext
+  filesProcessed: string[]
   conversationHistory: ResearchMessage[]
 }
 
@@ -48,6 +92,12 @@ export interface ValueProp {
   proof?: string
 }
 
+export interface ToneGuide {
+  adjectives: string[]     // 3 adjectives describing the voice
+  wordsToAvoid: string[]   // 3 words/phrases to avoid
+  exampleSentence: string  // 1 example sentence in the right tone
+}
+
 export interface MessagingOutput {
   primaryHeadline: string
   headlineAlternatives: string[]
@@ -58,6 +108,8 @@ export interface MessagingOutput {
   emotionalDrivers: string[]
   keyObjections: string[]
   positioningStatement: string
+  toneGuide: ToneGuide
+  confidenceNotes: string[]   // assumptions made due to thin research brief
 }
 
 export interface CopyItem {
@@ -65,6 +117,9 @@ export interface CopyItem {
   title: string
   description: string
   icon?: string
+  proof?: string
+  attribution?: string   // for testimonials: "Name, Title, Company"
+  context?: string       // for testimonials: one-line use case
 }
 
 export interface SectionCopy {
@@ -74,6 +129,10 @@ export interface SectionCopy {
   subheadline?: string
   body?: string
   ctaText?: string
+  secondaryCta?: string
+  supportingLine?: string    // social proof line for hero
+  trustSignals?: string[]    // for final CTA section
+  visualDescription?: string // for solution section
   items?: CopyItem[]
   approved: boolean
   humanEdited: boolean
@@ -94,6 +153,13 @@ export interface ColorPalette {
   border: string
 }
 
+export interface ComponentVariants {
+  hero: 'centered' | 'left-aligned' | 'split'
+  features: 'icon-grid' | 'list-with-screenshot' | 'alternating-rows'
+  testimonials: 'quote-cards' | 'single-large-quote' | 'avatar-grid'
+  cta: 'centered-banner' | 'split-with-form'
+}
+
 export interface DesignDirection {
   id: string
   name: string
@@ -105,6 +171,10 @@ export interface DesignDirection {
   }
   heroVariant: 'centered' | 'left-aligned' | 'split'
   mood: string
+  spacingDensity: 'compact' | 'balanced' | 'airy'
+  borderRadius: 'sharp' | 'subtle' | 'rounded'
+  designNotes: string
+  componentVariants: ComponentVariants
 }
 
 export interface DesignOutput {
@@ -114,29 +184,56 @@ export interface DesignOutput {
   componentPicks: Partial<Record<SectionType, string>>
 }
 
+export interface H2StructureItem {
+  section: string
+  currentHeadline: string
+  seoNote: string
+}
+
+export interface SEOChecklistItem {
+  item: string
+  pass: boolean
+  note: string
+}
+
 export interface SEOOutput {
   pageTitle: string
   metaDescription: string
   h1: string
-  keywords: string[]
+  focusKeyword: string
+  secondaryKeywords: string[]
+  longTailKeywords: string[]
+  semanticKeywords: string[]
+  keywords: string[]           // combined full keyword list
+  urlSlug: string
   schemaType: string
   ogTitle: string
   ogDescription: string
-  focusKeyword: string
-  secondaryKeywords: string[]
   schemaMarkup: Record<string, unknown>
+  h2Structure: H2StructureItem[]
+  technicalChecklist: SEOChecklistItem[]
+  headHtml: string             // ready-to-paste <head> block
+  keywordRationale: string
 }
 
 export interface QAIssue {
   severity: 'critical' | 'warning' | 'info'
   section: string
   message: string
+  remediation: string
   autoFixed: boolean
+}
+
+export interface CROChecklistItem {
+  item: string
+  pass: boolean
+  note: string
 }
 
 export interface QAOutput {
   score: number
   issues: QAIssue[]
+  croChecklist: CROChecklistItem[]
   suggestions: string[]
   approved: boolean
 }
@@ -191,12 +288,14 @@ export interface WebflowSection {
   slug: string
   content: Record<string, unknown>
   styles: Record<string, unknown>
+  variant: string
 }
 
 export interface GeneratedPage {
   html: string
   reactComponent: string
   webflowJson: WebflowSection[]
+  qaReport: QAOutput
 }
 
 export interface PipelineSession {

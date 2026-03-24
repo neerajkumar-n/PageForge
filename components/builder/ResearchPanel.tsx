@@ -10,7 +10,7 @@ import type { ResearchMessage, ResearchOutput } from '@/types'
 
 export function ResearchPanel() {
   const router = useRouter()
-  const { context, setResearch, setStep, setAgentStatus } = usePipelineStore()
+  const { context, setContext, setResearch, setStep, setAgentStatus } = usePipelineStore()
 
   const [messages, setMessages] = useState<ResearchMessage[]>([])
   const [input, setInput] = useState('')
@@ -23,12 +23,12 @@ export function ResearchPanel() {
   const bottomRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Auto-start the research conversation
+  // Auto-start the research conversation — no context required
   useEffect(() => {
-    if (!context || messages.length > 0) return
+    if (messages.length > 0) return
     startResearch()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context])
+  }, [])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -40,7 +40,7 @@ export function ResearchPanel() {
       const res = await fetch('/api/research-agent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ context, messages: [], fileContents: [] }),
+        body: JSON.stringify({ context: context ?? null, messages: [], fileContents: [] }),
       })
       const data = await res.json()
       if (data.message) {
@@ -69,7 +69,7 @@ export function ResearchPanel() {
       const res = await fetch('/api/research-agent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ context, messages: newMessages, fileContents }),
+        body: JSON.stringify({ context: null, messages: newMessages, fileContents }),
       })
       const data = await res.json()
 
@@ -86,6 +86,9 @@ export function ResearchPanel() {
   }
 
   function handleComplete(output: ResearchOutput) {
+    // Persist both the derived context and the full research output to the pipeline store
+    if (output.context) setContext(output.context)
+    setResearch(output)
     setResearchOutput(output)
     setIsComplete(true)
   }
@@ -148,14 +151,14 @@ export function ResearchPanel() {
         <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
           <div>
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Strategic Brief</p>
-            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{researchOutput.researchBrief}</p>
+            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{researchOutput.brief.company.oneLiner}</p>
           </div>
 
-          {researchOutput.uniqueAngles.length > 0 && (
+          {researchOutput.brief.competitive.marketGaps.length > 0 && (
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Positioning Angles</p>
               <ul className="space-y-1">
-                {researchOutput.uniqueAngles.map((angle, i) => (
+                {researchOutput.brief.competitive.marketGaps.map((angle: string, i: number) => (
                   <li key={i} className="text-sm text-gray-700 flex gap-2">
                     <span className="text-indigo-400 shrink-0">→</span>
                     {angle}
@@ -165,14 +168,14 @@ export function ResearchPanel() {
             </div>
           )}
 
-          {researchOutput.competitorInsights.length > 0 && (
+          {researchOutput.brief.competitive.competitors.length > 0 && (
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Competitor Gaps to Exploit</p>
               <ul className="space-y-1">
-                {researchOutput.competitorInsights.map((insight, i) => (
+                {researchOutput.brief.competitive.competitors.map((insight: { name: string; positioning: string }, i: number) => (
                   <li key={i} className="text-sm text-gray-700 flex gap-2">
                     <span className="text-amber-400 shrink-0">▸</span>
-                    {insight}
+                    {insight.positioning}
                   </li>
                 ))}
               </ul>

@@ -55,7 +55,7 @@ const AGENTS: AgentConfig[] = [
       button: 'bg-violet-600 hover:bg-violet-700',
       glow: 'shadow-violet-100',
     },
-    outputPreview: (s) => s.research?.researchBrief?.split('\n')[0]?.slice(0, 90) ?? null,
+    outputPreview: (s) => s.research?.brief?.company?.oneLiner?.slice(0, 90) ?? null,
   },
   {
     key: 'messaging',

@@ -63,6 +63,12 @@ export function mockMessaging(_context: BusinessContext): MessagingOutput {
     ],
     positioningStatement:
       'For VP Sales and RevOps leaders at 100–1000 person B2B companies who are tired of forecast calls that end in argument and spreadsheets that nobody trusts, Clairo is the revenue intelligence platform that gives you a defensible, AI-generated forecast before the quarter slips. Unlike generic BI tools or CRM-native analytics, Clairo is purpose-built for the mid-market revenue motion — with signal detection tuned to the deal cycles and buyer behaviors of your size company.',
+    toneGuide: {
+      adjectives: ['direct', 'credible', 'specific'],
+      wordsToAvoid: ['transform', 'revolutionary', 'seamless'],
+      exampleSentence: 'Close more deals with forecasts your team actually trusts.',
+    },
+    confidenceNotes: [],
   }
 }
 
@@ -291,6 +297,10 @@ export function mockDesign(_context: BusinessContext): DesignOutput {
         },
         heroVariant: 'left-aligned',
         mood: 'Boardroom-ready. The aesthetic of a company that has earned trust through results, not vibes.',
+        spacingDensity: 'balanced',
+        borderRadius: 'subtle',
+        designNotes: 'Default design direction',
+        componentVariants: { hero: 'centered', features: 'icon-grid', testimonials: 'quote-cards', cta: 'centered-banner' },
       },
       {
         id: 'dir-startup',
@@ -313,6 +323,10 @@ export function mockDesign(_context: BusinessContext): DesignOutput {
         },
         heroVariant: 'centered',
         mood: 'Built different. The aesthetic of a company that moves fast and makes the competition nervous.',
+        spacingDensity: 'balanced',
+        borderRadius: 'subtle',
+        designNotes: 'Default design direction',
+        componentVariants: { hero: 'centered', features: 'icon-grid', testimonials: 'quote-cards', cta: 'centered-banner' },
       },
       {
         id: 'dir-technical',
@@ -335,6 +349,10 @@ export function mockDesign(_context: BusinessContext): DesignOutput {
         },
         heroVariant: 'split',
         mood: 'Precision tooling. The aesthetic of a product built by people who obsess over accuracy.',
+        spacingDensity: 'balanced',
+        borderRadius: 'subtle',
+        designNotes: 'Default design direction',
+        componentVariants: { hero: 'centered', features: 'icon-grid', testimonials: 'quote-cards', cta: 'centered-banner' },
       },
     ],
     selectedDirectionId: 'dir-enterprise',
@@ -367,6 +385,7 @@ export function mockQA(_context: BusinessContext): QAOutput {
         message:
           'Primary headline is 10 words — at the mobile limit. Consider a shorter variant for small screens.',
         autoFixed: false,
+        remediation: 'Review and update this section',
       },
       {
         severity: 'warning',
@@ -374,6 +393,7 @@ export function mockQA(_context: BusinessContext): QAOutput {
         message:
           'No social proof near the pricing section. Adding a short testimonial or logo bar above pricing typically increases conversion by 12–18%.',
         autoFixed: false,
+        remediation: 'Review and update this section',
       },
       {
         severity: 'info',
@@ -381,6 +401,7 @@ export function mockQA(_context: BusinessContext): QAOutput {
         message:
           'Feature section has 5 items. Consider grouping into 3 primary + 2 secondary to reduce cognitive load.',
         autoFixed: false,
+        remediation: 'Review and update this section',
       },
       {
         severity: 'info',
@@ -388,7 +409,15 @@ export function mockQA(_context: BusinessContext): QAOutput {
         message:
           'Bottom CTA mirrors hero CTA exactly. A different framing (e.g., addressing the hesitant reader) typically outperforms an identical repeat.',
         autoFixed: false,
+        remediation: 'Review and update this section',
       },
+    ],
+    croChecklist: [
+      { item: 'Above-the-fold value prop is clear without scrolling', pass: true, note: 'Hero headline and subheadline clearly communicate value' },
+      { item: 'Primary CTA is visible above the fold', pass: true, note: 'CTA button present in hero section' },
+      { item: 'Social proof present within first 2 sections', pass: false, note: 'Logo bar exists but appears below hero — consider moving up' },
+      { item: 'Objections addressed on the page', pass: true, note: 'FAQ section covers main objections from messaging brief' },
+      { item: 'Mobile headline under 65 characters', pass: true, note: 'Hero headline is 58 characters' },
     ],
     suggestions: [
       'Add a data point or stat to the hero subheadline (e.g., "used by 340+ teams") for immediate social proof',
@@ -448,5 +477,12 @@ export function mockSEO(context: BusinessContext): SEOOutput {
         name: context.companyName,
       },
     },
+    longTailKeywords: ['best revenue forecasting for mid-market saas', 'how to improve sales forecast accuracy'],
+    semanticKeywords: ['pipeline visibility', 'deal scoring', 'CRM integration'],
+    urlSlug: 'revenue-intelligence-for-sales-teams',
+    h2Structure: [],
+    technicalChecklist: [],
+    headHtml: '<title>Mock SEO Title</title>',
+    keywordRationale: 'Primary keyword chosen for high commercial intent.',
   }
 }
