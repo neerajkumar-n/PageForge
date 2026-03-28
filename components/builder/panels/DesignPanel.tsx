@@ -44,23 +44,23 @@ function MiniPreview({ direction, selected, onSelect }: { direction: DesignDirec
   return (
     <div
       onClick={onSelect}
-      className={['rounded-xl border-2 overflow-hidden cursor-pointer transition-all', selected ? 'border-emerald-500 shadow-md shadow-emerald-100' : 'border-gray-200 hover:border-gray-300'].join(' ')}
+      className={['rounded-xl border-2 overflow-hidden cursor-pointer transition-all', selected ? 'border-emerald-500 shadow-md shadow-emerald-100' : 'border-zinc-800 hover:border-zinc-700'].join(' ')}
     >
       <div style={{ background: p.primary, padding: '1rem' }}>
         <div style={{ background: p.primaryForeground, opacity: 0.85, borderRadius: 4, height: 10, width: '75%', marginBottom: 6 }} />
         <div style={{ background: p.primaryForeground, opacity: 0.55, borderRadius: 4, height: 7, width: '55%', marginBottom: 10 }} />
         <div style={{ background: p.accent, borderRadius: 6, height: 22, width: 80, display: 'inline-block' }} />
       </div>
-      <div className="p-2.5 bg-white">
+      <div className="p-2.5 bg-zinc-900">
         <div className="flex justify-between items-center">
-          <p className="text-xs font-semibold text-gray-900 truncate">{direction.name}</p>
+          <p className="text-xs font-semibold text-zinc-100 truncate">{direction.name}</p>
           {selected && <span className="text-emerald-600 text-xs font-bold">✓</span>}
         </div>
         <div className="flex gap-1 mt-1.5">
           {[p.primary, p.accent, p.muted].map((c, i) => (
             <div key={i} style={{ width: 12, height: 12, borderRadius: 3, background: c, border: '1px solid rgba(0,0,0,0.1)' }} />
           ))}
-          <span className="text-gray-400 text-xs ml-1 truncate">{direction.typography.heading}</span>
+          <span className="text-zinc-500 text-xs ml-1 truncate">{direction.typography.heading}</span>
         </div>
       </div>
     </div>
@@ -73,15 +73,15 @@ function SortableRow({ id, label, enabled, onToggle }: { id: string; label: stri
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }}
-      className={['flex items-center gap-2 p-2.5 rounded-lg border text-sm', enabled ? 'bg-white border-gray-200' : 'bg-gray-50 border-dashed border-gray-200 opacity-50'].join(' ')}
+      className={['flex items-center gap-2 p-2.5 rounded-lg border text-sm', enabled ? 'bg-zinc-900 border-zinc-800' : 'bg-zinc-950 border-dashed border-zinc-800 opacity-50'].join(' ')}
     >
-      <button {...attributes} {...listeners} className="text-gray-300 hover:text-gray-500 cursor-grab">
+      <button {...attributes} {...listeners} className="text-zinc-600 hover:text-zinc-500 cursor-grab">
         <GripVertical size={14} />
       </button>
-      <span className="flex-1 text-sm font-medium text-gray-700">{label}</span>
+      <span className="flex-1 text-sm font-medium text-zinc-300">{label}</span>
       <label className="flex items-center gap-1 cursor-pointer">
         <input type="checkbox" checked={enabled} onChange={onToggle} className="w-3.5 h-3.5 accent-emerald-600" />
-        <span className="text-xs text-gray-400">{enabled ? 'On' : 'Off'}</span>
+        <span className="text-xs text-zinc-500">{enabled ? 'On' : 'Off'}</span>
       </label>
     </div>
   )
@@ -142,17 +142,17 @@ export function DesignPanel() {
   if (status === 'idle' || status === 'error') {
     return (
       <div className="p-6 flex flex-col items-center justify-center min-h-[300px] gap-4 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center text-2xl">🎨</div>
+        <div className="w-16 h-16 rounded-2xl bg-emerald-950/20 flex items-center justify-center text-2xl">🎨</div>
         <div>
-          <p className="font-semibold text-gray-900">Design Agent</p>
-          <p className="text-sm text-gray-500 mt-1 max-w-xs">Generates 3 distinct visual directions with palettes, typography, and layout suggestions.</p>
+          <p className="font-semibold text-zinc-100">Design Agent</p>
+          <p className="text-sm text-zinc-500 mt-1 max-w-xs">Generates 3 distinct visual directions with palettes, typography, and layout suggestions.</p>
         </div>
-        {status === 'error' && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">Something went wrong.</p>}
+        {status === 'error' && <p className="text-sm text-red-500 bg-red-950/20 px-3 py-2 rounded-lg">Something went wrong.</p>}
         <div className="flex flex-col gap-2">
           <Button onClick={handleRun} disabled={isRunning} className="bg-emerald-600 hover:bg-emerald-700">
             {isRunning ? <><Loader2 size={14} className="animate-spin" /> Running...</> : <><Sparkles size={14} /> Generate AI Directions</>}
           </Button>
-          <p className="text-xs text-gray-400">— or choose from —</p>
+          <p className="text-xs text-zinc-500">— or choose from —</p>
           <button onClick={() => { /* show presets even without run */ setTab('presets') }} className="text-xs text-emerald-600 hover:underline flex items-center gap-1 justify-center">
             <LayoutGrid size={12} /> Pick a B2B Preset
           </button>
@@ -165,8 +165,8 @@ export function DesignPanel() {
     return (
       <div className="p-6 flex flex-col items-center justify-center min-h-[300px] gap-4 text-center">
         <Loader2 className="animate-spin text-emerald-500" size={32} />
-        <p className="font-semibold text-gray-900">Design Agent running...</p>
-        <p className="text-sm text-gray-500">Generating 3 distinct visual directions</p>
+        <p className="font-semibold text-zinc-100">Design Agent running...</p>
+        <p className="text-sm text-zinc-500">Generating 3 distinct visual directions</p>
       </div>
     )
   }
@@ -181,7 +181,7 @@ export function DesignPanel() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={['flex-1 py-2 text-sm font-medium rounded-lg border transition-all', tab === t ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'].join(' ')}
+            className={['flex-1 py-2 text-sm font-medium rounded-lg border transition-all', tab === t ? 'border-emerald-500 bg-emerald-950/20 text-emerald-400' : 'border-zinc-800 text-zinc-400 hover:border-zinc-700'].join(' ')}
           >
             {label}
           </button>
@@ -190,7 +190,7 @@ export function DesignPanel() {
 
       {/* Re-run */}
       <div className="flex justify-end">
-        <button onClick={handleRun} disabled={isRunning} className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600">
+        <button onClick={handleRun} disabled={isRunning} className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-400">
           <RefreshCw size={11} className={isRunning ? 'animate-spin' : ''} /> Re-run AI
         </button>
       </div>
@@ -216,7 +216,7 @@ export function DesignPanel() {
             <div
               key={preset.id}
               onClick={() => handlePreset(preset.id)}
-              className={['rounded-xl border-2 overflow-hidden cursor-pointer transition-all', design.selectedDirectionId === preset.direction.id ? 'border-emerald-500 shadow-md' : 'border-gray-200 hover:border-gray-300'].join(' ')}
+              className={['rounded-xl border-2 overflow-hidden cursor-pointer transition-all', design.selectedDirectionId === preset.direction.id ? 'border-emerald-500 shadow-md' : 'border-zinc-800 hover:border-zinc-700'].join(' ')}
             >
               <div className="h-10 flex">
                 <div style={{ background: preset.direction.palette.primary, flex: 2 }} />
@@ -224,8 +224,8 @@ export function DesignPanel() {
                 <div style={{ background: preset.direction.palette.muted, flex: 1 }} />
               </div>
               <div className="p-2.5">
-                <p className="text-xs font-semibold text-gray-900">{preset.label}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{preset.category}</p>
+                <p className="text-xs font-semibold text-zinc-100">{preset.label}</p>
+                <p className="text-xs text-zinc-500 mt-0.5">{preset.category}</p>
               </div>
             </div>
           ))}
@@ -234,23 +234,23 @@ export function DesignPanel() {
 
       {/* Reference images */}
       <div>
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Reference Images</p>
+        <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2">Reference Images</p>
         <div className="flex gap-2 flex-wrap">
           {referenceImages.map((img) => (
             <div key={img.name} className="relative group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img.url} alt={img.name} className="w-20 h-14 object-cover rounded-lg border border-gray-200" />
+              <img src={img.url} alt={img.name} className="w-20 h-14 object-cover rounded-lg border border-zinc-800" />
               <button
                 onClick={() => setReferenceImages((prev) => prev.filter((i) => i.name !== img.name))}
-                className="absolute top-0.5 right-0.5 bg-white rounded-full p-0.5 shadow opacity-0 group-hover:opacity-100"
+                className="absolute top-0.5 right-0.5 bg-zinc-900 rounded-full p-0.5 shadow opacity-0 group-hover:opacity-100"
               >
-                <X size={10} className="text-gray-500" />
+                <X size={10} className="text-zinc-500" />
               </button>
             </div>
           ))}
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-20 h-14 rounded-lg border-2 border-dashed border-gray-300 hover:border-emerald-400 flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-emerald-500 transition-colors"
+            className="w-20 h-14 rounded-lg border-2 border-dashed border-zinc-700 hover:border-emerald-400 flex flex-col items-center justify-center gap-1 text-zinc-500 hover:text-emerald-500 transition-colors"
           >
             <ImageIcon size={14} />
             <span className="text-xs">Add</span>
@@ -261,7 +261,7 @@ export function DesignPanel() {
 
       {/* Section order */}
       <div>
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Section Order</p>
+        <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2">Section Order</p>
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={ALL_SECTIONS} strategy={verticalListSortingStrategy}>
             <div className="space-y-1.5">

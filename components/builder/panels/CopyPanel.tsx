@@ -45,18 +45,18 @@ function EditableField({
 }) {
   return (
     <div className="space-y-1">
-      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">{label}</label>
+      <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{label}</label>
       {multiline ? (
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full border border-gray-200 rounded-lg p-3 text-sm resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          className="w-full border border-zinc-800 rounded-lg p-3 text-sm resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
         />
       ) : (
         <input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          className="w-full border border-zinc-800 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
         />
       )}
     </div>
@@ -72,10 +72,10 @@ function ItemEditor({
 }) {
   if (!items || items.length === 0) return null
   return (
-    <div className="space-y-2 mt-4 pt-4 border-t border-gray-100">
-      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Items ({items.length})</p>
+    <div className="space-y-2 mt-4 pt-4 border-t border-zinc-800/60">
+      <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Items ({items.length})</p>
       {items.map((item, i) => (
-        <div key={item.id} className="p-3 bg-gray-50 rounded-xl space-y-2">
+        <div key={item.id} className="p-3 bg-zinc-950 rounded-xl space-y-2">
           <span className="text-xs text-blue-600 font-semibold">Item {i + 1}</span>
           <input
             value={item.title}
@@ -85,7 +85,7 @@ function ItemEditor({
               onChange(next)
             }}
             placeholder="Title"
-            className="w-full border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
+            className="w-full border border-zinc-800 rounded-lg p-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
           />
           <textarea
             value={item.description}
@@ -95,7 +95,7 @@ function ItemEditor({
               onChange(next)
             }}
             placeholder="Description"
-            className="w-full border border-gray-200 rounded-lg p-2 text-sm resize-y min-h-[56px] focus:outline-none focus:ring-1 focus:ring-blue-400"
+            className="w-full border border-zinc-800 rounded-lg p-2 text-sm resize-y min-h-[56px] focus:outline-none focus:ring-1 focus:ring-blue-400"
           />
         </div>
       ))}
@@ -123,22 +123,22 @@ export function CopyPanel() {
   if (status === 'idle' || status === 'error') {
     return (
       <div className="p-6 flex flex-col items-center justify-center min-h-[300px] gap-4 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-2xl">
+        <div className="w-16 h-16 rounded-2xl bg-blue-950/20 flex items-center justify-center text-2xl">
           ✍️
         </div>
         <div>
-          <p className="font-semibold text-gray-900">Copy Agent</p>
-          <p className="text-sm text-gray-500 mt-1 max-w-xs">
+          <p className="font-semibold text-zinc-100">Copy Agent</p>
+          <p className="text-sm text-zinc-500 mt-1 max-w-xs">
             Writes full landing page copy for all sections based on the messaging framework.
           </p>
           {!hasMessaging && (
-            <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-3">
+            <p className="text-xs text-amber-600 bg-amber-950/20 border border-amber-500/20 rounded-lg px-3 py-2 mt-3">
               💡 Run Messaging Agent first for best results
             </p>
           )}
         </div>
         {status === 'error' && (
-          <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">
+          <p className="text-sm text-red-500 bg-red-950/20 px-3 py-2 rounded-lg">
             Something went wrong. Try running again.
           </p>
         )}
@@ -157,8 +157,8 @@ export function CopyPanel() {
     return (
       <div className="p-6 flex flex-col items-center justify-center min-h-[300px] gap-4 text-center">
         <Loader2 className="animate-spin text-blue-500" size={32} />
-        <p className="font-semibold text-gray-900">Copy Agent running...</p>
-        <p className="text-sm text-gray-500">Writing copy for all 8 landing page sections</p>
+        <p className="font-semibold text-zinc-100">Copy Agent running...</p>
+        <p className="text-sm text-zinc-500">Writing copy for all 8 landing page sections</p>
       </div>
     )
   }
@@ -196,20 +196,20 @@ export function CopyPanel() {
   return (
     <div className="flex flex-col h-full">
       {/* Progress bar */}
-      <div className="px-6 py-3 border-b border-gray-100 bg-gray-50 flex items-center gap-3 shrink-0">
-        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div className="px-6 py-3 border-b border-zinc-800/60 bg-zinc-950 flex items-center gap-3 shrink-0">
+        <div className="flex-1 h-2 bg-zinc-700 rounded-full overflow-hidden">
           <div
-            className="h-full bg-blue-500 rounded-full transition-all duration-500"
+            className="h-full bg-blue-950/200 rounded-full transition-all duration-500"
             style={{ width: `${(approvedCount / sections.length) * 100}%` }}
           />
         </div>
-        <span className="text-xs font-medium text-gray-500 shrink-0">
+        <span className="text-xs font-medium text-zinc-500 shrink-0">
           {approvedCount}/{sections.length} approved
         </span>
         <button
           onClick={handleRun}
           disabled={isRunning}
-          className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1"
+          className="text-xs text-zinc-500 hover:text-zinc-400 flex items-center gap-1"
         >
           <RefreshCw size={11} className={isRunning ? 'animate-spin' : ''} />
         </button>
@@ -217,7 +217,7 @@ export function CopyPanel() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Section sidebar */}
-        <div className="w-44 border-r border-gray-100 overflow-y-auto shrink-0 py-2">
+        <div className="w-44 border-r border-zinc-800/60 overflow-y-auto shrink-0 py-2">
           {sections.map((s, i) => (
             <button
               key={s.id}
@@ -225,8 +225,8 @@ export function CopyPanel() {
               className={[
                 'w-full text-left flex items-center gap-2 px-3 py-2.5 text-sm transition-colors',
                 currentIdx === i
-                  ? 'bg-blue-50 text-blue-700 font-medium border-r-2 border-blue-500'
-                  : 'text-gray-600 hover:bg-gray-50',
+                  ? 'bg-blue-950/20 text-blue-400 font-medium border-r-2 border-blue-500'
+                  : 'text-zinc-400 hover:bg-zinc-950',
               ].join(' ')}
             >
               <span>{SECTION_ICONS[s.sectionType] ?? '📄'}</span>
@@ -241,9 +241,9 @@ export function CopyPanel() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-lg">{SECTION_ICONS[current.sectionType] ?? '📄'}</span>
-              <h3 className="font-semibold text-gray-900">{SECTION_LABELS[current.sectionType]}</h3>
+              <h3 className="font-semibold text-zinc-100">{SECTION_LABELS[current.sectionType]}</h3>
               {current.approved && (
-                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                <span className="text-xs bg-green-100 text-green-400 px-2 py-0.5 rounded-full font-medium">
                   ✓ Approved
                 </span>
               )}
@@ -251,7 +251,7 @@ export function CopyPanel() {
             {currentIdx < sections.length - 1 && (
               <button
                 onClick={() => setCurrentIdx(currentIdx + 1)}
-                className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600"
+                className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-400"
               >
                 Next <ChevronRight size={12} />
               </button>
@@ -295,7 +295,7 @@ export function CopyPanel() {
             />
           )}
 
-          <div className="flex gap-2 pt-4 border-t border-gray-100">
+          <div className="flex gap-2 pt-4 border-t border-zinc-800/60">
             <Button
               onClick={handleApprove}
               disabled={current.approved}
@@ -310,15 +310,15 @@ export function CopyPanel() {
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-4 border-t border-gray-100 shrink-0 flex justify-between items-center">
-        <p className="text-xs text-gray-400">
+      <div className="px-6 py-4 border-t border-zinc-800/60 shrink-0 flex justify-between items-center">
+        <p className="text-xs text-zinc-500">
           {approvedCount < sections.length
             ? `${sections.length - approvedCount} remaining`
             : '🎉 All sections approved'}
         </p>
         <button
           onClick={approveAll}
-          className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+          className="text-xs text-blue-600 hover:text-blue-400 font-medium"
         >
           Approve all →
         </button>

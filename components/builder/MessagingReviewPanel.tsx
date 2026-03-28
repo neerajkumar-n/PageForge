@@ -24,9 +24,9 @@ function InlineEdit({ value, onSave, multiline = false }: { value: string; onSav
   if (!editing) {
     return (
       <div className="group flex items-start gap-2">
-        <p className="flex-1 text-gray-800">{value}</p>
-        <button onClick={() => { setDraft(value); setEditing(true) }} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-gray-100">
-          <Edit2 size={14} className="text-gray-400" />
+        <p className="flex-1 text-zinc-200">{value}</p>
+        <button onClick={() => { setDraft(value); setEditing(true) }} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-zinc-800">
+          <Edit2 size={14} className="text-zinc-500" />
         </button>
       </div>
     )
@@ -39,21 +39,21 @@ function InlineEdit({ value, onSave, multiline = false }: { value: string; onSav
           autoFocus
           value={draft}
           onChange={e => setDraft(e.target.value)}
-          className="w-full border border-indigo-400 rounded-lg p-2 text-sm resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full border border-indigo-400 rounded-lg p-2 text-sm resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
       ) : (
         <input
           autoFocus
           value={draft}
           onChange={e => setDraft(e.target.value)}
-          className="w-full border border-indigo-400 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full border border-indigo-400 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
       )}
       <div className="flex gap-2">
-        <button onClick={() => { onSave(draft); setEditing(false) }} className="flex items-center gap-1 text-xs text-indigo-600 font-medium hover:underline">
+        <button onClick={() => { onSave(draft); setEditing(false) }} className="flex items-center gap-1 text-xs text-violet-400 font-medium hover:underline">
           <Check size={12} /> Save
         </button>
-        <button onClick={() => setEditing(false)} className="text-xs text-gray-400 hover:underline">Cancel</button>
+        <button onClick={() => setEditing(false)} className="text-xs text-zinc-500 hover:underline">Cancel</button>
       </div>
     </div>
   )
@@ -97,8 +97,8 @@ export function MessagingReviewPanel() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Review your messaging</h1>
-        <p className="text-gray-500 mt-1">Edit anything inline. Your changes train the copy agent.</p>
+        <h1 className="text-2xl font-bold text-zinc-100">Review your messaging</h1>
+        <p className="text-zinc-500 mt-1">Edit anything inline. Your changes train the copy agent.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -106,7 +106,7 @@ export function MessagingReviewPanel() {
         {/* LEFT: ICP Summary */}
         <div className="space-y-4">
           <Card padding="md">
-            <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">ICP Profile</h3>
+            <h3 className="font-semibold text-zinc-100 mb-3 text-sm uppercase tracking-wide">ICP Profile</h3>
             <div className="space-y-3">
               {[
                 { label: 'Role', value: usePipelineStore.getState().context?.icp.role ?? '' },
@@ -115,15 +115,15 @@ export function MessagingReviewPanel() {
                 { label: 'Goals', value: usePipelineStore.getState().context?.icp.goals ?? '' },
               ].map(({ label, value }) => (
                 <div key={label}>
-                  <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">{label}</p>
-                  <p className="text-sm text-gray-700">{value}</p>
+                  <p className="text-xs text-zinc-500 font-medium uppercase tracking-wide mb-0.5">{label}</p>
+                  <p className="text-sm text-zinc-300">{value}</p>
                 </div>
               ))}
             </div>
           </Card>
 
           <Card padding="md">
-            <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Positioning Statement</h3>
+            <h3 className="font-semibold text-zinc-100 mb-3 text-sm uppercase tracking-wide">Positioning Statement</h3>
             <InlineEdit
               value={messaging.positioningStatement}
               multiline
@@ -135,7 +135,7 @@ export function MessagingReviewPanel() {
           </Card>
 
           <Card padding="md">
-            <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Key Objections</h3>
+            <h3 className="font-semibold text-zinc-100 mb-3 text-sm uppercase tracking-wide">Key Objections</h3>
             <div className="flex flex-wrap gap-2">
               {messaging.keyObjections.map((obj, i) => (
                 <Badge key={i} variant="warning" className="text-xs">{obj}</Badge>
@@ -147,10 +147,10 @@ export function MessagingReviewPanel() {
         {/* MIDDLE: Headlines */}
         <div className="space-y-4">
           <Card padding="md">
-            <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Select & edit your headline</h3>
+            <h3 className="font-semibold text-zinc-100 mb-3 text-sm uppercase tracking-wide">Select & edit your headline</h3>
             <div className="space-y-3">
               {allHeadlines.map((h, i) => (
-                <div key={i} className={['p-3 rounded-lg border-2 cursor-pointer transition-all', selectedHeadline === i ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-gray-300'].join(' ')}
+                <div key={i} className={['p-3 rounded-lg border-2 cursor-pointer transition-all', selectedHeadline === i ? 'border-violet-500 bg-violet-950/20' : 'border-zinc-800 hover:border-zinc-700'].join(' ')}
                   onClick={() => setSelectedHeadline(i)}>
                   <div className="flex items-center gap-2 mb-2">
                     <input type="radio" checked={selectedHeadline === i} onChange={() => setSelectedHeadline(i)} className="accent-indigo-600" />
@@ -164,7 +164,7 @@ export function MessagingReviewPanel() {
           </Card>
 
           <Card padding="md">
-            <h3 className="font-semibold text-gray-900 mb-2 text-sm uppercase tracking-wide">Subheadline</h3>
+            <h3 className="font-semibold text-zinc-100 mb-2 text-sm uppercase tracking-wide">Subheadline</h3>
             <InlineEdit value={messaging.subheadline} multiline onSave={(v) => {
               logFeedback({ gate: 'messaging', field: 'subheadline', original: messaging.subheadline, revised: v, revisionType: classifyRevision(messaging.subheadline, v) })
               updateMessagingField('subheadline', v)
@@ -172,12 +172,12 @@ export function MessagingReviewPanel() {
           </Card>
 
           <Card padding="md">
-            <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">CTAs</h3>
+            <h3 className="font-semibold text-zinc-100 mb-3 text-sm uppercase tracking-wide">CTAs</h3>
             <div className="space-y-2">
               {[messaging.primaryCTA, ...messaging.ctaAlternatives].map((cta, i) => (
                 <div key={i} className="flex items-center gap-2">
                   {i === 0 && <Badge variant="success" size="sm">Primary</Badge>}
-                  {i > 0 && <span className="text-xs text-gray-400">Alt {i}</span>}
+                  {i > 0 && <span className="text-xs text-zinc-500">Alt {i}</span>}
                   <InlineEdit value={cta} onSave={(v) => {
                     if (i === 0) {
                       logFeedback({ gate: 'messaging', field: 'primaryCTA', original: cta, revised: v, revisionType: 'tone' })
@@ -197,21 +197,21 @@ export function MessagingReviewPanel() {
         {/* RIGHT: Value Props */}
         <div className="space-y-4">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Value Propositions</h3>
+            <h3 className="font-semibold text-zinc-100 mb-3 text-sm uppercase tracking-wide">Value Propositions</h3>
             {messaging.valuePropositions.map((vp) => (
               <Card key={vp.id} padding="md" className="mb-3">
                 <div className="space-y-2">
                   <div>
-                    <p className="text-xs text-gray-400 font-medium mb-1">Headline</p>
+                    <p className="text-xs text-zinc-500 font-medium mb-1">Headline</p>
                     <InlineEdit value={vp.headline} onSave={(v) => handleValuePropEdit(vp.id, 'headline', v, vp.headline)} />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 font-medium mb-1">Description</p>
+                    <p className="text-xs text-zinc-500 font-medium mb-1">Description</p>
                     <InlineEdit value={vp.description} multiline onSave={(v) => handleValuePropEdit(vp.id, 'description', v, vp.description)} />
                   </div>
                   {vp.proof && (
                     <div>
-                      <p className="text-xs text-gray-400 font-medium mb-1">Proof</p>
+                      <p className="text-xs text-zinc-500 font-medium mb-1">Proof</p>
                       <InlineEdit value={vp.proof} onSave={(v) => handleValuePropEdit(vp.id, 'proof', v, vp.proof ?? '')} />
                     </div>
                   )}

@@ -10,7 +10,7 @@ export function StartOverLink() {
     <Link
       href="/builder/hub"
       onClick={resetSession}
-      className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+      className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors"
     >
       Start over
     </Link>

@@ -42,8 +42,8 @@ export function AgentSettingsPanel() {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 mb-4">
-        <Info size={16} className="text-gray-400" />
-        <p className="text-sm text-gray-500">Customize each agent's persona and behavior. Changes apply to the next run.</p>
+        <Info size={16} className="text-zinc-500" />
+        <p className="text-sm text-zinc-500">Customize each agent's persona and behavior. Changes apply to the next run.</p>
       </div>
 
       {(Object.keys(AGENT_LABELS) as (keyof AgentConfigs)[]).map((agentKey) => {
@@ -53,26 +53,26 @@ export function AgentSettingsPanel() {
         const chars = effective[agentKey]
 
         return (
-          <div key={agentKey} className="border border-gray-200 rounded-xl overflow-hidden">
+          <div key={agentKey} className="border border-zinc-800 rounded-xl overflow-hidden">
             <button
-              className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left"
+              className="w-full flex items-center justify-between p-4 hover:bg-zinc-950 transition-colors text-left"
               onClick={() => setExpanded(isExpanded ? null : agentKey)}
             >
               <div className="flex items-center gap-3">
                 <div className={`w-2.5 h-2.5 rounded-full bg-${meta.color}-500`} />
                 <div>
-                  <p className="font-medium text-gray-900 text-sm">{meta.label}</p>
-                  <p className="text-xs text-gray-400">{meta.desc}</p>
+                  <p className="font-medium text-zinc-100 text-sm">{meta.label}</p>
+                  <p className="text-xs text-zinc-500">{meta.desc}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                {hasOverride && <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Modified</span>}
-                {isExpanded ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+                {hasOverride && <span className="text-xs bg-amber-100 text-amber-400 px-2 py-0.5 rounded-full font-medium">Modified</span>}
+                {isExpanded ? <ChevronUp size={16} className="text-zinc-500" /> : <ChevronDown size={16} className="text-zinc-500" />}
               </div>
             </button>
 
             {isExpanded && (
-              <div className="border-t border-gray-100 p-4 space-y-4">
+              <div className="border-t border-zinc-800/60 p-4 space-y-4">
                 {FIELDS.map(({ key, label, hint, multiline }) => (
                   <AgentField
                     key={key}
@@ -85,11 +85,11 @@ export function AgentSettingsPanel() {
                   />
                 ))}
 
-                <div className="pt-3 border-t border-gray-100">
-                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">Constraints ({chars.constraints.length})</p>
+                <div className="pt-3 border-t border-zinc-800/60">
+                  <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-2">Constraints ({chars.constraints.length})</p>
                   <div className="space-y-1">
                     {chars.constraints.map((c, i) => (
-                      <div key={i} className="flex items-start gap-2 text-xs text-gray-600 bg-gray-50 rounded p-2">
+                      <div key={i} className="flex items-start gap-2 text-xs text-zinc-400 bg-zinc-950 rounded p-2">
                         <span className="text-red-400 shrink-0">×</span>
                         <span>{c}</span>
                       </div>
@@ -101,7 +101,7 @@ export function AgentSettingsPanel() {
                   <div className="pt-2">
                     <button
                       onClick={() => handleReset(agentKey)}
-                      className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700"
+                      className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300"
                     >
                       <RotateCcw size={12} /> Reset to defaults
                     </button>
@@ -127,7 +127,7 @@ function AgentField({
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-gray-700">{label}</label>
+        <label className="text-xs font-medium text-zinc-300">{label}</label>
         {isDirty && <span className="text-xs text-amber-600 font-medium">Modified</span>}
       </div>
       {multiline ? (
@@ -135,17 +135,17 @@ function AgentField({
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onBlur={() => { if (draft !== value) onSave(draft) }}
-          className="w-full border border-gray-200 rounded-lg p-2.5 text-xs resize-y min-h-[72px] focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full border border-zinc-800 rounded-lg p-2.5 text-xs resize-y min-h-[72px] focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
       ) : (
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onBlur={() => { if (draft !== value) onSave(draft) }}
-          className="w-full border border-gray-200 rounded-lg p-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full border border-zinc-800 rounded-lg p-2 text-xs focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
       )}
-      <p className="text-xs text-gray-400">{hint}</p>
+      <p className="text-xs text-zinc-500">{hint}</p>
     </div>
   )
 }

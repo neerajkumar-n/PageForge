@@ -48,7 +48,7 @@ function MoodboardCard({ direction, selected, onSelect }: { direction: DesignDir
   return (
     <div
       onClick={onSelect}
-      className={['rounded-xl border-2 overflow-hidden cursor-pointer transition-all', selected ? 'border-indigo-500 shadow-lg shadow-indigo-100' : 'border-gray-200 hover:border-gray-300'].join(' ')}
+      className={['rounded-xl border-2 overflow-hidden cursor-pointer transition-all', selected ? 'border-violet-500 shadow-lg shadow-violet-500/20' : 'border-zinc-800 hover:border-zinc-700'].join(' ')}
     >
       {/* Mini hero preview */}
       <div style={{ background: p.primary, padding: '1.5rem 1.25rem' }}>
@@ -68,17 +68,17 @@ function MoodboardCard({ direction, selected, onSelect }: { direction: DesignDir
         ))}
       </div>
       {/* Info */}
-      <div className="p-3 bg-white border-t border-gray-100">
+      <div className="p-3 bg-zinc-900 border-t border-zinc-800/60">
         <div className="flex items-center justify-between mb-1">
-          <p className="font-semibold text-sm text-gray-900">{direction.name}</p>
-          {selected && <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-medium">Selected</span>}
+          <p className="font-semibold text-sm text-zinc-100">{direction.name}</p>
+          {selected && <span className="text-xs bg-violet-950/200/15 text-violet-400 px-2 py-0.5 rounded-full font-medium">Selected</span>}
         </div>
-        <p className="text-xs text-gray-500 leading-relaxed">{direction.mood}</p>
+        <p className="text-xs text-zinc-500 leading-relaxed">{direction.mood}</p>
         <div className="flex gap-1.5 mt-2">
           {[p.primary, p.accent, p.muted, p.foreground].map((c, i) => (
             <div key={i} style={{ width: 16, height: 16, borderRadius: 3, background: c, border: '1px solid rgba(0,0,0,0.1)' }} />
           ))}
-          <span className="text-xs text-gray-400 ml-1">{direction.typography.heading}</span>
+          <span className="text-xs text-zinc-500 ml-1">{direction.typography.heading}</span>
         </div>
       </div>
     </div>
@@ -90,7 +90,7 @@ function PresetCard({ preset, selected, onSelect }: { preset: typeof B2B_DESIGN_
   return (
     <div
       onClick={onSelect}
-      className={['rounded-xl border-2 overflow-hidden cursor-pointer transition-all', selected ? 'border-indigo-500 shadow-lg shadow-indigo-100' : 'border-gray-200 hover:border-gray-300'].join(' ')}
+      className={['rounded-xl border-2 overflow-hidden cursor-pointer transition-all', selected ? 'border-violet-500 shadow-lg shadow-violet-500/20' : 'border-zinc-800 hover:border-zinc-700'].join(' ')}
     >
       {/* Color strip */}
       <div className="h-12 flex">
@@ -98,16 +98,16 @@ function PresetCard({ preset, selected, onSelect }: { preset: typeof B2B_DESIGN_
         <div style={{ background: p.accent, flex: 1 }} />
         <div style={{ background: p.muted, flex: 1 }} />
       </div>
-      <div className="p-3 bg-white">
+      <div className="p-3 bg-zinc-900">
         <div className="flex items-center justify-between mb-1">
-          <p className="font-semibold text-sm text-gray-900">{preset.label}</p>
-          {selected && <span className="text-xs bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-medium">✓</span>}
+          <p className="font-semibold text-sm text-zinc-100">{preset.label}</p>
+          {selected && <span className="text-xs bg-violet-950/200/15 text-violet-400 px-1.5 py-0.5 rounded-full font-medium">✓</span>}
         </div>
-        <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">{preset.category}</span>
-        <p className="text-xs text-gray-400 mt-2 leading-relaxed line-clamp-2">{preset.description}</p>
+        <span className="text-xs text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">{preset.category}</span>
+        <p className="text-xs text-zinc-500 mt-2 leading-relaxed line-clamp-2">{preset.description}</p>
         <div className="flex gap-1 flex-wrap mt-2">
           {preset.bestFor.slice(0, 2).map((t, i) => (
-            <span key={i} className="text-xs bg-gray-50 border border-gray-100 text-gray-500 px-1.5 py-0.5 rounded">
+            <span key={i} className="text-xs bg-zinc-950 border border-zinc-800/60 text-zinc-500 px-1.5 py-0.5 rounded">
               {t}
             </span>
           ))}
@@ -123,12 +123,12 @@ function SortableSection({ id, label, enabled, onToggle }: { id: string; label: 
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }}
-      className={['flex items-center gap-3 p-3 rounded-lg border transition-all', enabled ? 'bg-white border-gray-200' : 'bg-gray-50 border-dashed border-gray-200 opacity-60'].join(' ')}
+      className={['flex items-center gap-3 p-3 rounded-lg border transition-all', enabled ? 'bg-zinc-900 border-zinc-800' : 'bg-zinc-950 border-dashed border-zinc-800 opacity-60'].join(' ')}
     >
-      <button {...attributes} {...listeners} className="text-gray-300 hover:text-gray-500 cursor-grab active:cursor-grabbing">
+      <button {...attributes} {...listeners} className="text-zinc-600 hover:text-zinc-500 cursor-grab active:cursor-grabbing">
         <GripVertical size={16} />
       </button>
-      <span className="flex-1 text-sm font-medium text-gray-700">{label}</span>
+      <span className="flex-1 text-sm font-medium text-zinc-300">{label}</span>
       <label className="flex items-center gap-1.5 cursor-pointer">
         <input
           type="checkbox"
@@ -136,7 +136,7 @@ function SortableSection({ id, label, enabled, onToggle }: { id: string; label: 
           onChange={onToggle}
           className="w-4 h-4 rounded accent-indigo-600"
         />
-        <span className="text-xs text-gray-400">{enabled ? 'On' : 'Off'}</span>
+        <span className="text-xs text-zinc-500">{enabled ? 'On' : 'Off'}</span>
       </label>
     </div>
   )
@@ -209,22 +209,22 @@ export function DesignReviewPanel() {
   return (
     <div className="max-w-5xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Choose your design direction</h1>
-        <p className="text-gray-500 mt-1">Pick a visual direction, reorder sections, and configure component variants.</p>
+        <h1 className="text-2xl font-bold text-zinc-100">Choose your design direction</h1>
+        <p className="text-zinc-500 mt-1">Pick a visual direction, reorder sections, and configure component variants.</p>
       </div>
 
       {/* Design source tabs */}
       <div className="flex gap-2 mb-6">
         <button
           onClick={() => setDesignSource('ai')}
-          className={['flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all', designSource === 'ai' ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'].join(' ')}
+          className={['flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all', designSource === 'ai' ? 'border-violet-500 bg-violet-950/20 text-violet-400' : 'border-zinc-800 text-zinc-400 hover:border-zinc-700'].join(' ')}
         >
           <Sparkles size={14} />
           AI-Generated Directions
         </button>
         <button
           onClick={() => setDesignSource('preset')}
-          className={['flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all', designSource === 'preset' ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'].join(' ')}
+          className={['flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all', designSource === 'preset' ? 'border-violet-500 bg-violet-950/20 text-violet-400' : 'border-zinc-800 text-zinc-400 hover:border-zinc-700'].join(' ')}
         >
           <LayoutGrid size={14} />
           B2B Design Presets
@@ -234,7 +234,7 @@ export function DesignReviewPanel() {
       {/* 1a. AI-generated directions */}
       {designSource === 'ai' && (
         <section className="mb-8">
-          <h2 className="font-semibold text-gray-700 mb-4 text-sm uppercase tracking-wide">
+          <h2 className="font-semibold text-zinc-300 mb-4 text-sm uppercase tracking-wide">
             1. AI-Generated Visual Directions
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -248,7 +248,7 @@ export function DesignReviewPanel() {
             ))}
           </div>
           {design.directions.find(d => d.id === design.selectedDirectionId) && (
-            <div className="mt-3 p-4 bg-indigo-50 border border-indigo-100 rounded-xl">
+            <div className="mt-3 p-4 bg-violet-950/20 border border-indigo-100 rounded-xl">
               <p className="text-sm text-indigo-800">{design.directions.find(d => d.id === design.selectedDirectionId)?.description}</p>
             </div>
           )}
@@ -258,10 +258,10 @@ export function DesignReviewPanel() {
       {/* 1b. B2B Design Presets */}
       {designSource === 'preset' && (
         <section className="mb-8">
-          <h2 className="font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wide">
+          <h2 className="font-semibold text-zinc-300 mb-2 text-sm uppercase tracking-wide">
             1. B2B Design Presets
           </h2>
-          <p className="text-xs text-gray-400 mb-4">Battle-tested archetypes for common B2B categories. Click to apply — you can still customize from there.</p>
+          <p className="text-xs text-zinc-500 mb-4">Battle-tested archetypes for common B2B categories. Click to apply — you can still customize from there.</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {B2B_DESIGN_PRESETS.map((preset) => (
               <PresetCard
@@ -277,10 +277,10 @@ export function DesignReviewPanel() {
 
       {/* Reference images */}
       <section className="mb-8">
-        <h2 className="font-semibold text-gray-700 mb-1 text-sm uppercase tracking-wide">
+        <h2 className="font-semibold text-zinc-300 mb-1 text-sm uppercase tracking-wide">
           {designSource === 'ai' ? '2.' : '2.'} Reference Images (Optional)
         </h2>
-        <p className="text-xs text-gray-400 mb-3">Upload screenshots of designs you like. The Design Agent will incorporate these when you re-run it.</p>
+        <p className="text-xs text-zinc-500 mb-3">Upload screenshots of designs you like. The Design Agent will incorporate these when you re-run it.</p>
         <div className="flex gap-3 flex-wrap">
           {referenceImages.map((img) => (
             <div key={img.name} className="relative group">
@@ -288,20 +288,20 @@ export function DesignReviewPanel() {
               <img
                 src={img.url}
                 alt={img.name}
-                className="w-32 h-20 object-cover rounded-lg border border-gray-200"
+                className="w-32 h-20 object-cover rounded-lg border border-zinc-800"
               />
               <button
                 onClick={() => removeReferenceImage(img.name)}
-                className="absolute top-1 right-1 bg-white rounded-full p-0.5 shadow opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute top-1 right-1 bg-zinc-900 rounded-full p-0.5 shadow opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <X size={12} className="text-gray-500" />
+                <X size={12} className="text-zinc-500" />
               </button>
-              <p className="text-xs text-gray-400 mt-1 truncate w-32">{img.name}</p>
+              <p className="text-xs text-zinc-500 mt-1 truncate w-32">{img.name}</p>
             </div>
           ))}
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-32 h-20 rounded-lg border-2 border-dashed border-gray-300 hover:border-indigo-400 flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-indigo-500 transition-colors"
+            className="w-32 h-20 rounded-lg border-2 border-dashed border-zinc-700 hover:border-indigo-400 flex flex-col items-center justify-center gap-1 text-zinc-500 hover:text-violet-400 transition-colors"
           >
             <ImageIcon size={18} />
             <span className="text-xs">Add image</span>
@@ -319,8 +319,8 @@ export function DesignReviewPanel() {
 
       {/* 3. Section order */}
       <section className="mb-8">
-        <h2 className="font-semibold text-gray-700 mb-1 text-sm uppercase tracking-wide">3. Section order</h2>
-        <p className="text-xs text-gray-400 mb-4">Drag to reorder. Toggle sections on/off.</p>
+        <h2 className="font-semibold text-zinc-300 mb-1 text-sm uppercase tracking-wide">3. Section order</h2>
+        <p className="text-xs text-zinc-500 mb-4">Drag to reorder. Toggle sections on/off.</p>
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={ALL_SECTIONS} strategy={verticalListSortingStrategy}>
             <div className="space-y-2 max-w-md">
@@ -340,12 +340,12 @@ export function DesignReviewPanel() {
 
       {/* 4. Component variants */}
       <section className="mb-8">
-        <h2 className="font-semibold text-gray-700 mb-1 text-sm uppercase tracking-wide">4. Component variants</h2>
-        <p className="text-xs text-gray-400 mb-4">Choose layout style for sections that have multiple options.</p>
+        <h2 className="font-semibold text-zinc-300 mb-1 text-sm uppercase tracking-wide">4. Component variants</h2>
+        <p className="text-xs text-zinc-500 mb-4">Choose layout style for sections that have multiple options.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {(Object.entries(VARIANTS) as [SectionType, { value: string; label: string }[]][]).map(([sectionType, options]) => (
-            <div key={sectionType} className="bg-white border border-gray-200 rounded-xl p-4">
-              <p className="text-sm font-medium text-gray-700 mb-3">{SECTION_LABELS[sectionType]}</p>
+            <div key={sectionType} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+              <p className="text-sm font-medium text-zinc-300 mb-3">{SECTION_LABELS[sectionType]}</p>
               <div className="flex gap-2 flex-wrap">
                 {options.map((opt) => {
                   const current = design.componentPicks[sectionType] ?? options[0].value
@@ -354,7 +354,7 @@ export function DesignReviewPanel() {
                     <button
                       key={opt.value}
                       onClick={() => setComponentVariant(sectionType, opt.value)}
-                      className={['px-3 py-1.5 rounded-lg text-xs font-medium border transition-all', selected ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'].join(' ')}
+                      className={['px-3 py-1.5 rounded-lg text-xs font-medium border transition-all', selected ? 'border-violet-500 bg-violet-950/20 text-violet-400' : 'border-zinc-800 text-zinc-400 hover:border-zinc-700'].join(' ')}
                     >
                       {opt.label}
                     </button>
