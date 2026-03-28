@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Send, Paperclip, X, CheckCircle, Loader2, ArrowRight, SkipForward, FileText } from 'lucide-react'
+import { Send, Paperclip, X, CheckCircle, Loader2, ArrowRight, SkipForward, FileText, Wand2 } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { usePipelineStore } from '@/lib/store/pipeline'
 import { Button } from '@/components/ui/Button'
@@ -17,6 +17,8 @@ export function ResearchPanel({ onClose }: { onClose?: () => void }) {
   const [researchOutput, setResearchOutput] = useState<ResearchOutput | null>(null)
   const [fileContents, setFileContents] = useState<{ name: string; content: string }[]>([])
   const [initializing, setInitializing] = useState(true)
+  // True once the user has sent their first reply — enables the recovery "Build Brief" button
+  const [userHasReplied, setUserHasReplied] = useState(false)
 
   const bottomRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -62,6 +64,7 @@ export function ResearchPanel({ onClose }: { onClose?: () => void }) {
     setMessages(newMessages)
     setInput('')
     setLoading(true)
+    setUserHasReplied(true)
 
     try {
       const res = await fetch('/api/research-agent', {
@@ -78,6 +81,41 @@ export function ResearchPanel({ onClose }: { onClose?: () => void }) {
       }
     } catch {
       toast.error('Failed to get a response. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Recovery: explicitly ask the agent to output the JSON brief now.
+  // Used when the LLM gave a conversational response instead of JSON after the user replied.
+  async function forceBuildBrief() {
+    if (loading) return
+    setLoading(true)
+
+    // Inject a system-level nudge as a user message
+    const nudge: ResearchMessage = {
+      role: 'user',
+      content: 'That looks good. Now please output ONLY the completed JSON research brief — no preamble, no explanation.',
+    }
+    const newMessages = [...messages, nudge]
+    setMessages(newMessages)
+
+    try {
+      const res = await fetch('/api/research-agent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ context: null, messages: newMessages, fileContents }),
+      })
+      const data = await res.json()
+
+      if (data.isComplete && data.output) {
+        handleComplete(data.output)
+      } else if (data.message) {
+        setMessages((prev) => [...prev, { role: 'assistant', content: data.message }])
+        toast.error('Brief generation failed. Try clicking "Build Brief" again.')
+      }
+    } catch {
+      toast.error('Failed to build brief. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -282,6 +320,21 @@ export function ResearchPanel({ onClose }: { onClose?: () => void }) {
               </button>
             </span>
           ))}
+        </div>
+      )}
+
+      {/* Recovery: show "Build Research Brief" after user has replied but agent didn't complete */}
+      {userHasReplied && !loading && !isComplete && (
+        <div className="mb-3 flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-violet-950/30 border border-violet-500/20">
+          <p className="text-xs text-zinc-400 leading-snug">
+            Provided your answers? Click to generate the research brief.
+          </p>
+          <button
+            onClick={forceBuildBrief}
+            className="shrink-0 flex items-center gap-1.5 text-xs font-semibold bg-violet-600 hover:bg-violet-500 text-white px-3 py-1.5 rounded-lg transition-colors"
+          >
+            <Wand2 size={12} /> Build Brief
+          </button>
         </div>
       )}
 
