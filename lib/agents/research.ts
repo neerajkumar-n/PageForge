@@ -134,21 +134,30 @@ If you have product docs, a sales deck, or positioning doc — attach the file n
     .join('')
     .trim()
 
-  // Detect if agent output the completion JSON
-  const trimmed = text.replace(/```json|```/g, '').trim()
-  if (trimmed.startsWith('{')) {
+  // Strip markdown code fences, then find the outermost JSON object anywhere in the response.
+  // The LLM sometimes wraps JSON in prose ("Here is the brief: {...}") so we can't rely
+  // on the response starting with '{'.
+  const stripped = text.replace(/```json|```/g, '')
+  const firstBrace = stripped.indexOf('{')
+  const lastBrace = stripped.lastIndexOf('}')
+
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    const candidate = stripped.slice(firstBrace, lastBrace + 1).trim()
     try {
-      const brief = JSON.parse(trimmed) as ResearchBrief
-      const context = deriveBusinessContext(brief)
-      const output: ResearchOutput = {
-        brief,
-        context,
-        filesProcessed: fileContents.map((f) => f.name),
-        conversationHistory: messages,
+      const brief = JSON.parse(candidate) as ResearchBrief
+      // Validate minimal required fields to avoid false positives
+      if (brief.company?.name && brief.icp?.primaryRole && brief.pageGoal?.primaryCTA) {
+        const context = deriveBusinessContext(brief)
+        const output: ResearchOutput = {
+          brief,
+          context,
+          filesProcessed: fileContents.map((f) => f.name),
+          conversationHistory: messages,
+        }
+        return { message: '', isComplete: true, output }
       }
-      return { message: '', isComplete: true, output }
     } catch {
-      // Not valid JSON — treat as conversation message
+      // Not valid JSON — fall through and return as chat message
     }
   }
 
