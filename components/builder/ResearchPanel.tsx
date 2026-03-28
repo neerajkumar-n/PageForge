@@ -1,16 +1,14 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { Send, Paperclip, X, CheckCircle, Loader2, ArrowRight, SkipForward, FileText } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { usePipelineStore } from '@/lib/store/pipeline'
 import { Button } from '@/components/ui/Button'
 import type { ResearchMessage, ResearchOutput } from '@/types'
 
-export function ResearchPanel() {
-  const router = useRouter()
-  const { context, setContext, setResearch, setStep, setAgentStatus } = usePipelineStore()
+export function ResearchPanel({ onClose }: { onClose?: () => void }) {
+  const { context, setContext, setResearch, setAgentStatus } = usePipelineStore()
 
   const [messages, setMessages] = useState<ResearchMessage[]>([])
   const [input, setInput] = useState('')
@@ -118,14 +116,13 @@ export function ResearchPanel() {
     if (!researchOutput) return
     setResearch(researchOutput)
     setAgentStatus('research', 'done')
-    setStep('running-agents')
-    router.push('/builder/running')
+    // Close the slide-over and stay on Agent Hub — no page navigation needed
+    onClose?.()
   }
 
   function handleSkip() {
     setAgentStatus('research', 'skipped')
-    setStep('running-agents')
-    router.push('/builder/running')
+    onClose?.()
   }
 
   if (initializing) {
