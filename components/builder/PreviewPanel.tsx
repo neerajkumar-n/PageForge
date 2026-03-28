@@ -55,23 +55,23 @@ export function PreviewPanel() {
   return (
     <div className="flex flex-col h-full">
       {/* Top toolbar */}
-      <div className="flex items-center justify-between pb-4 border-b border-gray-200 mb-4 flex-wrap gap-3">
+      <div className="flex items-center justify-between pb-4 border-b border-zinc-800 mb-4 flex-wrap gap-3">
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+          <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
             <button
               onClick={() => setViewport('desktop')}
-              className={['p-1.5 rounded-md transition-all', viewport === 'desktop' ? 'bg-white shadow text-indigo-600' : 'text-gray-400 hover:text-gray-600'].join(' ')}
+              className={['p-1.5 rounded-md transition-all', viewport === 'desktop' ? 'bg-zinc-900 shadow text-violet-400' : 'text-zinc-500 hover:text-zinc-400'].join(' ')}
             >
               <Monitor size={16} />
             </button>
             <button
               onClick={() => setViewport('mobile')}
-              className={['p-1.5 rounded-md transition-all', viewport === 'mobile' ? 'bg-white shadow text-indigo-600' : 'text-gray-400 hover:text-gray-600'].join(' ')}
+              className={['p-1.5 rounded-md transition-all', viewport === 'mobile' ? 'bg-zinc-900 shadow text-violet-400' : 'text-zinc-500 hover:text-zinc-400'].join(' ')}
             >
               <Smartphone size={16} />
             </button>
           </div>
-          <span className="text-sm text-gray-400">{viewport === 'desktop' ? '1280px' : '375px'}</span>
+          <span className="text-sm text-zinc-500">{viewport === 'desktop' ? '1280px' : '375px'}</span>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
@@ -80,9 +80,9 @@ export function PreviewPanel() {
             <button
               onClick={() => setShowIssues(!showIssues)}
               className={['flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-medium transition-all',
-                scoreColor === 'green' ? 'border-green-200 bg-green-50 text-green-700' :
-                scoreColor === 'amber' ? 'border-amber-200 bg-amber-50 text-amber-700' :
-                'border-red-200 bg-red-50 text-red-700'
+                scoreColor === 'green' ? 'border-green-500/20 bg-green-950/20 text-green-400' :
+                scoreColor === 'amber' ? 'border-amber-500/20 bg-amber-950/20 text-amber-400' :
+                'border-red-500/20 bg-red-950/20 text-red-400'
               ].join(' ')}
             >
               {scoreColor === 'green' ? <CheckCircle size={14} /> : <AlertTriangle size={14} />}
@@ -103,7 +103,7 @@ export function PreviewPanel() {
           </Button>
           <button
             onClick={() => { if (confirm('Start over? This will clear all your work.')) resetSession() }}
-            className="text-xs text-gray-400 hover:text-gray-600 underline ml-2"
+            className="text-xs text-zinc-500 hover:text-zinc-400 underline ml-2"
           >
             Start over
           </button>
@@ -112,25 +112,25 @@ export function PreviewPanel() {
 
       {/* QA Issues panel */}
       {showIssues && qa && (
-        <div className="mb-4 p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
-          <h3 className="font-semibold text-sm text-gray-700">QA Issues ({qa.issues.length})</h3>
+        <div className="mb-4 p-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-3">
+          <h3 className="font-semibold text-sm text-zinc-300">QA Issues ({qa.issues.length})</h3>
           <div className="space-y-2">
             {qa.issues.map((issue, i) => (
               <div key={i} className="flex items-start gap-2 text-sm">
                 <Badge variant={severityMap[issue.severity]} size="sm" className="shrink-0 mt-0.5">{issue.severity}</Badge>
                 <div>
-                  <span className="font-medium text-gray-700">{issue.section}: </span>
-                  <span className="text-gray-600">{issue.message}</span>
+                  <span className="font-medium text-zinc-300">{issue.section}: </span>
+                  <span className="text-zinc-400">{issue.message}</span>
                 </div>
               </div>
             ))}
           </div>
           {qa.suggestions.length > 0 && (
-            <div className="pt-2 border-t border-gray-200">
-              <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Suggestions</h4>
+            <div className="pt-2 border-t border-zinc-800">
+              <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-2">Suggestions</h4>
               <ul className="space-y-1">
                 {qa.suggestions.map((s, i) => (
-                  <li key={i} className="flex items-start gap-1.5 text-xs text-gray-600">
+                  <li key={i} className="flex items-start gap-1.5 text-xs text-zinc-400">
                     <Info size={12} className="text-blue-400 shrink-0 mt-0.5" />
                     {s}
                   </li>
@@ -142,26 +142,26 @@ export function PreviewPanel() {
       )}
 
       {/* Preview iframe */}
-      <div className="flex-1 flex justify-center overflow-auto bg-gray-100 rounded-xl p-4">
+      <div className="flex-1 flex justify-center overflow-auto bg-zinc-800 rounded-xl p-4">
         {loading ? (
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
               <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-gray-500 text-sm">Building your page...</p>
+              <p className="text-zinc-500 text-sm">Building your page...</p>
             </div>
           </div>
         ) : generatedPage?.html ? (
           <iframe
             srcDoc={generatedPage.html}
-            className="bg-white shadow-xl rounded-lg transition-all"
+            className="bg-zinc-900 shadow-xl rounded-lg transition-all"
             style={{ width: viewport === 'desktop' ? '100%' : 375, height: 800, border: 'none' }}
             title="Landing page preview"
           />
         ) : (
-          <div className="flex items-center justify-center h-96 text-gray-400">
+          <div className="flex items-center justify-center h-96 text-zinc-500">
             <div className="text-center">
               <p className="text-sm">Preview not available yet.</p>
-              <p className="text-xs mt-1 text-gray-300">Complete all previous steps to generate the page.</p>
+              <p className="text-xs mt-1 text-zinc-600">Complete all previous steps to generate the page.</p>
             </div>
           </div>
         )}

@@ -35,18 +35,18 @@ For each section in the confirmed sectionOrder:
 
 ## Step 3 — HTML Output
 Generate a single self-contained .html file:
-- Full <!DOCTYPE html> structure with `lang="en"` attribute on `<html>`
-- All meta tags and JSON-LD from the SEO Agent's headHtml in `<head>` — include every tag verbatim, do not summarize or omit
+- Full DOCTYPE html structure with lang="en" attribute on the html element
+- All meta tags and JSON-LD from the SEO Agent's headHtml in the head block — include every tag verbatim, do not summarize or omit
 - Google Fonts import for the selected typography pair
 - CSS custom properties block defining the full palette (--color-primary, etc.)
 - All sections rendered as semantic HTML — use the correct elements:
-  - `<main>` wraps all page sections
-  - `<section>` with `aria-labelledby` pointing to the section's H2
-  - `<article>` for testimonials, FAQ items, and feature cards (each self-contained piece of content)
-  - `<figure>` + `<figcaption>` for screenshots, diagrams, or product visuals
-  - `<h1>` for the page headline (exactly once), `<h2>` for every section heading, `<h3>` for sub-items
-  - `<ul>` / `<li>` for feature lists and bullet points — never use `<div>` to represent lists
-- **FAQ section** must use semantic markup: each Q&A pair as an `<article>` containing a `<h3>` (the question) and a `<p>` (the answer). The first sentence of each `<p>` must be the direct standalone answer. This structure enables AI engines to extract FAQ content accurately.
+  - main element wraps all page sections
+  - section element with aria-labelledby pointing to the section's H2
+  - article element for testimonials, FAQ items, and feature cards (each self-contained piece of content)
+  - figure + figcaption for screenshots, diagrams, or product visuals
+  - h1 for the page headline (exactly once), h2 for every section heading, h3 for sub-items
+  - ul/li for feature lists and bullet points — never use div to represent lists
+- **FAQ section** must use semantic markup: each Q&A pair as an article element containing an h3 (the question) and a p (the answer). The first sentence of each p must be the direct standalone answer. This structure enables AI engines to extract FAQ content accurately.
 - **Hero section** body copy must place the primary keyword and core value proposition within the first visible paragraph — this is the AEO answer-first requirement.
 - Inline Tailwind via CDN for utility classes
 - No external JavaScript dependencies — must render fully without JS
@@ -96,11 +96,11 @@ Before delivering output, run a self-check:
 - JSON-LD is valid (all brackets/braces closed)
 - HTML is valid (no unclosed tags)
 - Mobile headline is legible (H1 under 65 characters or wraps cleanly)
-- AEO: `<html lang="en">` attribute is present
-- AEO: Every `<section>` has an `aria-labelledby` pointing to its H2
-- AEO: FAQ items use `<article>` + `<h3>` + `<p>` structure (not generic divs)
+- AEO: html element has lang="en" attribute
+- AEO: Every section element has an aria-labelledby pointing to its H2
+- AEO: FAQ items use article + h3 + p structure (not generic divs)
 - AEO: Hero body copy includes primary keyword in the first visible paragraph
-- AEO: All lists use `<ul>`/`<li>`, not `<div>` stacks
+- AEO: All lists use ul/li, not div stacks
 - AEO: FAQPage JSON-LD schema is present and includes all Q&A pairs
 
 Produce a QA report with pass/fail for each item and any auto-fixes applied.

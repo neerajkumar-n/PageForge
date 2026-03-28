@@ -4,14 +4,14 @@ import { usePipelineStore } from '@/lib/store/pipeline'
 import type { PipelineStep } from '@/types'
 
 const STEPS: { id: PipelineStep; label: string }[] = [
-  { id: 'intake', label: 'Intake' },
-  { id: 'research', label: 'Research' },
-  { id: 'running-agents', label: 'AI Agents' },
-  { id: 'messaging-review', label: 'Messaging' },
-  { id: 'copy-review', label: 'Copy' },
-  { id: 'design-review', label: 'Design' },
-  { id: 'seo-review', label: 'SEO' },
-  { id: 'preview', label: 'Preview' },
+  { id: 'intake',          label: 'Intake'    },
+  { id: 'research',        label: 'Research'  },
+  { id: 'running-agents',  label: 'Agents'    },
+  { id: 'messaging-review',label: 'Messaging' },
+  { id: 'copy-review',     label: 'Copy'      },
+  { id: 'design-review',   label: 'Design'    },
+  { id: 'seo-review',      label: 'SEO'       },
+  { id: 'preview',         label: 'Preview'   },
 ]
 
 const STEP_ORDER = STEPS.map((s) => s.id)
@@ -26,45 +26,43 @@ export function StepProgress() {
   const currentIndex = getStepIndex(currentStep)
 
   return (
-    <nav className="flex items-center gap-0">
+    <nav className="flex items-center gap-0" aria-label="Progress">
       {STEPS.map((step, i) => {
-        const status =
-          i < currentIndex ? 'done' : i === currentIndex ? 'active' : 'pending'
+        const status = i < currentIndex ? 'done' : i === currentIndex ? 'active' : 'pending'
         return (
           <div key={step.id} className="flex items-center">
-            {/* Step circle */}
+            {/* Step indicator */}
             <div className="flex flex-col items-center gap-1">
               <div
                 className={[
-                  'w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all',
+                  'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold transition-all duration-300',
                   status === 'done'
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-violet-600 text-white shadow-[0_0_8px_rgba(124,58,237,0.4)]'
                     : status === 'active'
-                    ? 'bg-white border-2 border-indigo-600 text-indigo-600'
-                    : 'bg-gray-100 border border-gray-300 text-gray-400',
+                    ? 'bg-zinc-900 border-2 border-violet-500 text-violet-400 shadow-[0_0_10px_rgba(124,58,237,0.3)]'
+                    : 'bg-zinc-900 border border-zinc-700 text-zinc-600',
                 ].join(' ')}
               >
-                {status === 'done' ? <Check size={12} /> : <span>{i + 1}</span>}
+                {status === 'done' ? <Check size={10} strokeWidth={3} /> : <span>{i + 1}</span>}
               </div>
               <span
                 className={[
-                  'text-xs whitespace-nowrap hidden lg:block',
-                  status === 'active'
-                    ? 'text-indigo-600 font-semibold'
-                    : status === 'done'
-                    ? 'text-indigo-500'
-                    : 'text-gray-400',
+                  'text-[10px] whitespace-nowrap hidden lg:block font-medium transition-colors',
+                  status === 'active'  ? 'text-violet-400'
+                  : status === 'done' ? 'text-zinc-500'
+                  : 'text-zinc-700',
                 ].join(' ')}
               >
                 {step.label}
               </span>
             </div>
-            {/* Connector */}
+
+            {/* Connector line */}
             {i < STEPS.length - 1 && (
               <div
                 className={[
-                  'h-0.5 w-4 sm:w-8 mx-1 transition-all',
-                  i < currentIndex ? 'bg-indigo-600' : 'bg-gray-200',
+                  'h-px w-3 sm:w-5 mx-0.5 transition-all duration-500',
+                  i < currentIndex ? 'bg-violet-600/60' : 'bg-zinc-800',
                 ].join(' ')}
               />
             )}

@@ -7,29 +7,18 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   padding?: 'sm' | 'md' | 'lg'
 }
 
-const paddingClasses = {
-  sm: 'p-3',
-  md: 'p-5',
-  lg: 'p-6',
-}
+const paddingClasses = { sm: 'p-3', md: 'p-5', lg: 'p-6' }
 
-export function Card({
-  selected = false,
-  hoverable = false,
-  padding = 'md',
-  className,
-  children,
-  ...props
-}: CardProps) {
+export function Card({ selected = false, hoverable = false, padding = 'md', className, children, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        'rounded-xl border bg-white',
+        'rounded-xl border bg-zinc-900',
         paddingClasses[padding],
         selected
-          ? 'border-indigo-500 ring-2 ring-indigo-500 ring-offset-1'
-          : 'border-gray-200',
-        hoverable && 'cursor-pointer transition-shadow hover:shadow-md',
+          ? 'border-violet-500/60 shadow-glow-violet'
+          : 'border-zinc-800',
+        hoverable && 'cursor-pointer transition-all duration-200 hover:border-zinc-700 hover:shadow-card-hover hover:-translate-y-px',
         className
       )}
       {...props}

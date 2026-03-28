@@ -23,18 +23,18 @@ const SECTION_LABELS: Record<string, string> = {
 function EditableField({ label, value, multiline, onChange }: { label: string; value: string; multiline?: boolean; onChange: (v: string) => void }) {
   return (
     <div className="space-y-1">
-      <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">{label}</label>
+      <label className="text-xs font-medium text-zinc-500 uppercase tracking-wide">{label}</label>
       {multiline ? (
         <textarea
           value={value}
           onChange={e => onChange(e.target.value)}
-          className="w-full border border-gray-200 rounded-lg p-3 text-sm resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          className="w-full border border-zinc-800 rounded-lg p-3 text-sm resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
         />
       ) : (
         <input
           value={value}
           onChange={e => onChange(e.target.value)}
-          className="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          className="w-full border border-zinc-800 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
         />
       )}
     </div>
@@ -44,22 +44,22 @@ function EditableField({ label, value, multiline, onChange }: { label: string; v
 function ItemEditor({ items, onChange }: { items: SectionCopy['items']; onChange: (items: SectionCopy['items']) => void }) {
   if (!items || items.length === 0) return null
   return (
-    <div className="space-y-3 mt-3 pt-3 border-t border-gray-100">
-      <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Items ({items.length})</p>
+    <div className="space-y-3 mt-3 pt-3 border-t border-zinc-800/60">
+      <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide">Items ({items.length})</p>
       {items.map((item, i) => (
-        <div key={item.id} className="p-3 bg-gray-50 rounded-lg space-y-2">
-          <p className="text-xs text-gray-400 font-medium">Item {i + 1}</p>
+        <div key={item.id} className="p-3 bg-zinc-950 rounded-lg space-y-2">
+          <p className="text-xs text-zinc-500 font-medium">Item {i + 1}</p>
           <input
             value={item.title}
             onChange={e => { const next = [...items]; next[i] = { ...next[i], title: e.target.value }; onChange(next) }}
             placeholder="Title"
-            className="w-full border border-gray-200 rounded p-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
+            className="w-full border border-zinc-800 rounded p-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
           />
           <textarea
             value={item.description}
             onChange={e => { const next = [...items]; next[i] = { ...next[i], description: e.target.value }; onChange(next) }}
             placeholder="Description"
-            className="w-full border border-gray-200 rounded p-2 text-sm resize-y min-h-[60px] focus:outline-none focus:ring-1 focus:ring-indigo-400"
+            className="w-full border border-zinc-800 rounded p-2 text-sm resize-y min-h-[60px] focus:outline-none focus:ring-1 focus:ring-indigo-400"
           />
         </div>
       ))}
@@ -119,14 +119,14 @@ export function CopyReviewPanel() {
     <div className="max-w-5xl mx-auto">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Review your copy</h1>
-          <p className="text-gray-500 mt-1">{approvedCount} of {sections.length} sections approved</p>
+          <h1 className="text-2xl font-bold text-zinc-100">Review your copy</h1>
+          <p className="text-zinc-500 mt-1">{approvedCount} of {sections.length} sections approved</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-indigo-600 rounded-full transition-all" style={{ width: `${(approvedCount / sections.length) * 100}%` }} />
+          <div className="h-2 w-40 bg-zinc-700 rounded-full overflow-hidden">
+            <div className="h-full bg-violet-600 rounded-full transition-all" style={{ width: `${(approvedCount / sections.length) * 100}%` }} />
           </div>
-          <span className="text-sm text-gray-500">{approvedCount}/{sections.length}</span>
+          <span className="text-sm text-zinc-500">{approvedCount}/{sections.length}</span>
         </div>
       </div>
 
@@ -138,10 +138,10 @@ export function CopyReviewPanel() {
             <button
               key={s.id}
               onClick={() => setCurrentIdx(i)}
-              className={['w-full text-left flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-all', currentIdx === i ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-600 hover:bg-gray-50'].join(' ')}
+              className={['w-full text-left flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-all', currentIdx === i ? 'bg-violet-950/20 text-violet-400 font-medium' : 'text-zinc-400 hover:bg-zinc-950'].join(' ')}
             >
               <span className="shrink-0">
-                {s.approved ? <Check size={14} className="text-green-500" /> : <span className="w-3.5 h-3.5 rounded-full border-2 border-gray-300 inline-block" />}
+                {s.approved ? <Check size={14} className="text-green-500" /> : <span className="w-3.5 h-3.5 rounded-full border-2 border-zinc-700 inline-block" />}
               </span>
               {SECTION_LABELS[s.sectionType] ?? s.sectionType}
             </button>
@@ -149,17 +149,17 @@ export function CopyReviewPanel() {
         </div>
 
         {/* Main area: current section editor */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-4">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <h2 className="font-semibold text-gray-900 text-lg">{SECTION_LABELS[current.sectionType]}</h2>
+              <h2 className="font-semibold text-zinc-100 text-lg">{SECTION_LABELS[current.sectionType]}</h2>
               {current.approved && <Badge variant="success" size="sm">Approved</Badge>}
               {current.humanEdited && <Badge variant="info" size="sm">Edited</Badge>}
             </div>
             <button
               onClick={handleRegenerate}
               disabled={regenerating}
-              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 disabled:opacity-50"
+              className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 disabled:opacity-50"
             >
               <RefreshCw size={12} className={regenerating ? 'animate-spin' : ''} />
               Regenerate
@@ -182,7 +182,7 @@ export function CopyReviewPanel() {
             <ItemEditor items={current.items} onChange={(items) => handleFieldChange('items', items, JSON.stringify(current.items))} />
           )}
 
-          <div className="flex gap-3 pt-4 border-t border-gray-100">
+          <div className="flex gap-3 pt-4 border-t border-zinc-800/60">
             <Button onClick={handleApprove} disabled={current.approved}>
               <Check size={14} />
               {current.approved ? 'Approved' : 'Approve section'}
@@ -197,7 +197,7 @@ export function CopyReviewPanel() {
       </div>
 
       <div className="mt-6 pt-6 border-t flex justify-between items-center">
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-zinc-500">
           {sections.length - approvedCount > 0
             ? `${sections.length - approvedCount} sections remaining — or continue and we'll auto-approve them.`
             : 'All sections approved. Ready to design!'}

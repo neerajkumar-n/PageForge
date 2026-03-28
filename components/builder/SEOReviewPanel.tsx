@@ -29,9 +29,9 @@ function EditableField({
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</label>
+        <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">{label}</label>
         {maxLength && (
-          <span className={['text-xs font-mono', isOver ? 'text-red-500' : 'text-gray-400'].join(' ')}>
+          <span className={['text-xs font-mono', isOver ? 'text-red-500' : 'text-zinc-500'].join(' ')}>
             {charCount}/{maxLength}
           </span>
         )}
@@ -40,7 +40,7 @@ function EditableField({
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={['w-full text-sm border rounded-lg px-3 py-2 resize-none outline-none transition-colors', isOver ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-indigo-400'].join(' ')}
+          className={['w-full text-sm border rounded-lg px-3 py-2 resize-none outline-none transition-colors', isOver ? 'border-red-300 focus:border-red-400' : 'border-zinc-800 focus:border-indigo-400'].join(' ')}
           rows={3}
         />
       ) : (
@@ -48,24 +48,24 @@ function EditableField({
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={['w-full text-sm border rounded-lg px-3 py-2 outline-none transition-colors', isOver ? 'border-red-300 focus:border-red-400' : 'border-gray-200 focus:border-indigo-400'].join(' ')}
+          className={['w-full text-sm border rounded-lg px-3 py-2 outline-none transition-colors', isOver ? 'border-red-300 focus:border-red-400' : 'border-zinc-800 focus:border-indigo-400'].join(' ')}
         />
       )}
-      {hint && <p className="text-xs text-gray-400">{hint}</p>}
+      {hint && <p className="text-xs text-zinc-500">{hint}</p>}
     </div>
   )
 }
 
 function SERPPreview({ title, description, url }: { title: string; description: string; url: string }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-4">
-      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">SERP Preview</p>
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+      <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-3">SERP Preview</p>
       <div className="space-y-0.5">
-        <p className="text-xs text-gray-500 truncate">{url || 'https://yoursite.com'}</p>
+        <p className="text-xs text-zinc-500 truncate">{url || 'https://yoursite.com'}</p>
         <p className="text-[#1a0dab] text-lg leading-tight hover:underline cursor-pointer line-clamp-1">
           {title || 'Page title will appear here'}
         </p>
-        <p className="text-sm text-gray-600 line-clamp-2 leading-snug">
+        <p className="text-sm text-zinc-400 line-clamp-2 leading-snug">
           {description || 'Meta description will appear here. Make it compelling to maximize click-through rates.'}
         </p>
       </div>
@@ -118,12 +118,12 @@ export function SEOReviewPanel() {
   if (loading) {
     return (
       <div className="max-w-3xl mx-auto flex flex-col items-center justify-center py-24 gap-4">
-        <div className="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center">
-          <Loader2 className="animate-spin text-indigo-500" size={24} />
+        <div className="w-12 h-12 rounded-full bg-violet-950/20 flex items-center justify-center">
+          <Loader2 className="animate-spin text-violet-400" size={24} />
         </div>
         <div className="text-center">
-          <p className="font-semibold text-gray-900">SEO Agent is running</p>
-          <p className="text-sm text-gray-500 mt-1">Generating meta tags, schema markup, and keyword strategy...</p>
+          <p className="font-semibold text-zinc-100">SEO Agent is running</p>
+          <p className="text-sm text-zinc-500 mt-1">Generating meta tags, schema markup, and keyword strategy...</p>
         </div>
       </div>
     )
@@ -135,13 +135,13 @@ export function SEOReviewPanel() {
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">SEO Review</h1>
-          <p className="text-gray-500 mt-1 text-sm">Review and edit your metadata before building the final page.</p>
+          <h1 className="text-2xl font-bold text-zinc-100">SEO Review</h1>
+          <p className="text-zinc-500 mt-1 text-sm">Review and edit your metadata before building the final page.</p>
         </div>
         <button
           onClick={generateSEO}
           disabled={generating}
-          className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 border border-gray-200 rounded-lg px-3 py-2 transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 border border-zinc-800 rounded-lg px-3 py-2 transition-colors disabled:opacity-50"
         >
           <RefreshCw size={14} className={generating ? 'animate-spin' : ''} />
           Regenerate
@@ -156,10 +156,10 @@ export function SEOReviewPanel() {
       />
 
       {/* Meta Tags */}
-      <section className="bg-white border border-gray-200 rounded-xl p-5 space-y-5">
+      <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-5">
         <div className="flex items-center gap-2">
-          <Search size={16} className="text-indigo-500" />
-          <h2 className="font-semibold text-gray-900">Search Meta Tags</h2>
+          <Search size={16} className="text-violet-400" />
+          <h2 className="font-semibold text-zinc-100">Search Meta Tags</h2>
         </div>
 
         <EditableField
@@ -186,10 +186,10 @@ export function SEOReviewPanel() {
       </section>
 
       {/* Open Graph */}
-      <section className="bg-white border border-gray-200 rounded-xl p-5 space-y-5">
+      <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-5">
         <div className="flex items-center gap-2">
-          <Globe size={16} className="text-indigo-500" />
-          <h2 className="font-semibold text-gray-900">Social Sharing (Open Graph)</h2>
+          <Globe size={16} className="text-violet-400" />
+          <h2 className="font-semibold text-zinc-100">Social Sharing (Open Graph)</h2>
         </div>
 
         <EditableField
@@ -210,26 +210,26 @@ export function SEOReviewPanel() {
       </section>
 
       {/* Keywords */}
-      <section className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
+      <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-4">
         <div className="flex items-center gap-2">
-          <Tag size={16} className="text-indigo-500" />
-          <h2 className="font-semibold text-gray-900">Keyword Strategy</h2>
+          <Tag size={16} className="text-violet-400" />
+          <h2 className="font-semibold text-zinc-100">Keyword Strategy</h2>
         </div>
 
         <div>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Focus Keyword</p>
+          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-2">Focus Keyword</p>
           <div className="flex items-center gap-2">
-            <span className="bg-indigo-100 text-indigo-700 text-sm font-semibold px-3 py-1.5 rounded-full">
+            <span className="bg-violet-950/200/15 text-violet-400 text-sm font-semibold px-3 py-1.5 rounded-full">
               {seo.focusKeyword}
             </span>
           </div>
         </div>
 
         <div>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">All Keywords</p>
+          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-2">All Keywords</p>
           <div className="flex flex-wrap gap-2">
             {seo.keywords.map((kw, i) => (
-              <span key={i} className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+              <span key={i} className="text-xs bg-zinc-800 text-zinc-300 px-2.5 py-1 rounded-full">
                 {kw}
               </span>
             ))}
@@ -238,10 +238,10 @@ export function SEOReviewPanel() {
 
         {seo.secondaryKeywords.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Secondary Keywords</p>
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-2">Secondary Keywords</p>
             <div className="flex flex-wrap gap-2">
               {seo.secondaryKeywords.map((kw, i) => (
-                <span key={i} className="text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full">
+                <span key={i} className="text-xs bg-blue-950/20 text-blue-400 px-2.5 py-1 rounded-full">
                   {kw}
                 </span>
               ))}
@@ -251,17 +251,17 @@ export function SEOReviewPanel() {
       </section>
 
       {/* Schema Markup */}
-      <section className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
+      <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Code size={16} className="text-indigo-500" />
-            <h2 className="font-semibold text-gray-900">Schema Markup (JSON-LD)</h2>
+            <Code size={16} className="text-violet-400" />
+            <h2 className="font-semibold text-zinc-100">Schema Markup (JSON-LD)</h2>
           </div>
-          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+          <span className="text-xs bg-green-100 text-green-400 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
             <CheckCircle size={10} /> {seo.schemaType}
           </span>
         </div>
-        <pre className="text-xs bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-gray-700 leading-relaxed">
+        <pre className="text-xs bg-zinc-950 border border-zinc-800 rounded-lg p-4 overflow-x-auto text-zinc-300 leading-relaxed">
           {JSON.stringify(seo.schemaMarkup, null, 2)}
         </pre>
       </section>

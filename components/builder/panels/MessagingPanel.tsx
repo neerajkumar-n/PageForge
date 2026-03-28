@@ -33,12 +33,12 @@ function InlineEdit({
   if (!editing) {
     return (
       <div className={['group flex items-start gap-2', className].join(' ')}>
-        <p className="flex-1 text-sm text-gray-800 leading-relaxed">{value}</p>
+        <p className="flex-1 text-sm text-zinc-200 leading-relaxed">{value}</p>
         <button
           onClick={() => { setDraft(value); setEditing(true) }}
-          className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-gray-100"
+          className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-zinc-800"
         >
-          <Edit2 size={12} className="text-gray-400" />
+          <Edit2 size={12} className="text-zinc-500" />
         </button>
       </div>
     )
@@ -51,24 +51,24 @@ function InlineEdit({
           autoFocus
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          className="w-full border border-purple-400 rounded-lg p-2 text-sm resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-purple-400"
+          className="w-full border border-violet-500 rounded-lg p-2 text-sm resize-y min-h-[80px] focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
       ) : (
         <input
           autoFocus
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          className="w-full border border-purple-400 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+          className="w-full border border-violet-500 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
       )}
       <div className="flex gap-3">
         <button
           onClick={() => { onSave(draft); setEditing(false) }}
-          className="flex items-center gap-1 text-xs text-purple-600 font-medium hover:underline"
+          className="flex items-center gap-1 text-xs text-purple-400 font-medium hover:underline"
         >
           <Check size={11} /> Save
         </button>
-        <button onClick={() => setEditing(false)} className="text-xs text-gray-400 hover:underline">
+        <button onClick={() => setEditing(false)} className="text-xs text-zinc-500 hover:underline">
           Cancel
         </button>
       </div>
@@ -79,7 +79,7 @@ function InlineEdit({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="space-y-3">
-      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{title}</p>
+      <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{title}</p>
       {children}
     </div>
   )
@@ -122,17 +122,17 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
   if (status === 'idle' || status === 'error') {
     return (
       <div className="p-6 flex flex-col items-center justify-center min-h-[300px] gap-4 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-purple-50 flex items-center justify-center text-2xl">
+        <div className="w-16 h-16 rounded-2xl bg-purple-950/20 flex items-center justify-center text-2xl">
           💬
         </div>
         <div>
-          <p className="font-semibold text-gray-900">Messaging Agent</p>
-          <p className="text-sm text-gray-500 mt-1 max-w-xs">
+          <p className="font-semibold text-zinc-100">Messaging Agent</p>
+          <p className="text-sm text-zinc-500 mt-1 max-w-xs">
             Analyzes your ICP to create headlines, value props, CTAs, and a positioning statement.
           </p>
         </div>
         {status === 'error' && (
-          <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">
+          <p className="text-sm text-red-500 bg-red-950/20 px-3 py-2 rounded-lg">
             Something went wrong. Try running again.
           </p>
         )}
@@ -147,8 +147,8 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
     return (
       <div className="p-6 flex flex-col items-center justify-center min-h-[300px] gap-4 text-center">
         <Loader2 className="animate-spin text-purple-500" size={32} />
-        <p className="font-semibold text-gray-900">Messaging Agent running...</p>
-        <p className="text-sm text-gray-500">Analyzing your ICP and building a messaging hierarchy</p>
+        <p className="font-semibold text-zinc-100">Messaging Agent running...</p>
+        <p className="text-sm text-zinc-500">Analyzing your ICP and building a messaging hierarchy</p>
       </div>
     )
   }
@@ -164,7 +164,7 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
         <button
           onClick={handleRun}
           disabled={isRunning}
-          className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 border border-zinc-800 rounded-lg px-3 py-1.5 transition-colors"
         >
           <RefreshCw size={12} className={isRunning ? 'animate-spin' : ''} />
           Re-run agent
@@ -181,8 +181,8 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
               className={[
                 'p-3 rounded-xl border-2 cursor-pointer transition-all',
                 selectedHeadlineIdx === i
-                  ? 'border-purple-400 bg-purple-50'
-                  : 'border-gray-200 hover:border-gray-300',
+                  ? 'border-violet-500 bg-purple-950/20'
+                  : 'border-zinc-800 hover:border-zinc-700',
               ].join(' ')}
             >
               <div className="flex items-center gap-2 mb-1.5">
@@ -190,11 +190,11 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
                   className={[
                     'w-3.5 h-3.5 rounded-full border-2 shrink-0',
                     selectedHeadlineIdx === i
-                      ? 'border-purple-500 bg-purple-500'
-                      : 'border-gray-300',
+                      ? 'border-purple-500 bg-purple-950/200'
+                      : 'border-zinc-700',
                   ].join(' ')}
                 />
-                <span className="text-xs font-medium text-gray-400">
+                <span className="text-xs font-medium text-zinc-500">
                   {i === 0 ? 'Primary' : `Alternative ${i}`}
                 </span>
               </div>
@@ -218,7 +218,7 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
 
       {/* Subheadline */}
       <Section title="Subheadline">
-        <div className="p-3 bg-gray-50 rounded-xl">
+        <div className="p-3 bg-zinc-950 rounded-xl">
           <InlineEdit
             value={messaging.subheadline}
             multiline
@@ -231,10 +231,10 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
       <Section title="Value Propositions">
         <div className="space-y-3">
           {messaging.valuePropositions.map((vp, i) => (
-            <div key={vp.id} className="p-4 border border-gray-200 rounded-xl space-y-2">
-              <span className="text-xs text-purple-600 font-semibold bg-purple-50 px-2 py-0.5 rounded-full">#{i + 1}</span>
+            <div key={vp.id} className="p-4 border border-zinc-800 rounded-xl space-y-2">
+              <span className="text-xs text-purple-400 font-semibold bg-purple-950/20 px-2 py-0.5 rounded-full">#{i + 1}</span>
               <div>
-                <p className="text-xs text-gray-400 font-medium mb-1">Headline</p>
+                <p className="text-xs text-zinc-500 font-medium mb-1">Headline</p>
                 <InlineEdit
                   value={vp.headline}
                   onSave={(v) => {
@@ -244,7 +244,7 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
                 />
               </div>
               <div>
-                <p className="text-xs text-gray-400 font-medium mb-1">Description</p>
+                <p className="text-xs text-zinc-500 font-medium mb-1">Description</p>
                 <InlineEdit
                   value={vp.description}
                   multiline
@@ -256,7 +256,7 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
               </div>
               {vp.proof && (
                 <div>
-                  <p className="text-xs text-gray-400 font-medium mb-1">Proof</p>
+                  <p className="text-xs text-zinc-500 font-medium mb-1">Proof</p>
                   <InlineEdit
                     value={vp.proof}
                     onSave={(v) => {
@@ -275,8 +275,8 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
       <Section title="CTAs">
         <div className="space-y-2">
           {[messaging.primaryCTA, ...messaging.ctaAlternatives].map((cta, i) => (
-            <div key={i} className="flex items-center gap-2 p-2.5 bg-gray-50 rounded-lg">
-              <span className={['text-xs font-medium px-1.5 py-0.5 rounded', i === 0 ? 'bg-purple-100 text-purple-700' : 'bg-gray-200 text-gray-500'].join(' ')}>
+            <div key={i} className="flex items-center gap-2 p-2.5 bg-zinc-950 rounded-lg">
+              <span className={['text-xs font-medium px-1.5 py-0.5 rounded', i === 0 ? 'bg-purple-500/15 text-purple-400' : 'bg-zinc-700 text-zinc-500'].join(' ')}>
                 {i === 0 ? 'Primary' : `Alt ${i}`}
               </span>
               <InlineEdit
@@ -301,7 +301,7 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
       <Section title="Key Objections">
         <div className="flex flex-wrap gap-2">
           {messaging.keyObjections.map((obj, i) => (
-            <span key={i} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1.5 rounded-full">
+            <span key={i} className="text-xs bg-amber-950/20 text-amber-400 border border-amber-500/20 px-2.5 py-1.5 rounded-full">
               {obj}
             </span>
           ))}
@@ -310,7 +310,7 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
 
       {/* Positioning */}
       <Section title="Positioning Statement">
-        <div className="p-3 bg-gray-50 rounded-xl">
+        <div className="p-3 bg-zinc-950 rounded-xl">
           <InlineEdit
             value={messaging.positioningStatement}
             multiline
@@ -323,7 +323,7 @@ export function MessagingPanel({ onClose }: { onClose?: () => void }) {
       <Section title="Emotional Drivers">
         <div className="flex flex-wrap gap-2">
           {messaging.emotionalDrivers.map((d, i) => (
-            <span key={i} className="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-1.5 rounded-full">
+            <span key={i} className="text-xs bg-violet-950/20 text-violet-400 border border-indigo-200 px-2.5 py-1.5 rounded-full">
               {d}
             </span>
           ))}
