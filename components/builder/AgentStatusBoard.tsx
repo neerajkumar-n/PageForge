@@ -62,9 +62,9 @@ function statusLabel(status: AgentStatus[AgentKey]): string {
 }
 
 function statusStyles(status: AgentStatus[AgentKey]): string {
-  if (status === 'running') return 'bg-violet-950/200/15 text-violet-400 border border-violet-500/20'
-  if (status === 'done')    return 'bg-green-950/200/15 text-green-400 border border-green-500/20'
-  if (status === 'error')   return 'bg-red-950/200/15 text-red-400 border border-red-500/20'
+  if (status === 'running') return 'bg-violet-500/15 text-violet-400 border border-violet-500/20'
+  if (status === 'done')    return 'bg-green-500/15 text-green-400 border border-green-500/20'
+  if (status === 'error')   return 'bg-red-500/15 text-red-400 border border-red-500/20'
   return 'bg-zinc-800 text-zinc-500 border border-zinc-700'
 }
 
@@ -122,7 +122,7 @@ export function AgentStatusBoard() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="font-semibold text-zinc-100 text-sm">{agent.label}</p>
                   {agent.badge && (
-                    <span className="text-[10px] bg-violet-950/200/15 text-violet-400 border border-violet-500/20 px-1.5 py-0.5 rounded font-medium">
+                    <span className="text-[10px] bg-violet-500/15 text-violet-400 border border-violet-500/20 px-1.5 py-0.5 rounded font-medium">
                       {agent.badge}
                     </span>
                   )}

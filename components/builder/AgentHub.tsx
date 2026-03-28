@@ -52,7 +52,7 @@ const AGENTS: AgentConfig[] = [
       border:      'border-violet-500/40',
       glow:        'shadow-[0_0_20px_rgba(124,58,237,0.2)]',
       text:        'text-violet-400',
-      badge:       'bg-violet-950/200/15 text-violet-400 border border-violet-500/20',
+      badge:       'bg-violet-500/15 text-violet-400 border border-violet-500/20',
       panelAccent: 'bg-violet-600',
     },
     outputPreview: (s) => s.research?.brief?.company?.oneLiner?.slice(0, 90) ?? null,
@@ -67,7 +67,7 @@ const AGENTS: AgentConfig[] = [
       border:      'border-purple-500/40',
       glow:        'shadow-[0_0_20px_rgba(168,85,247,0.2)]',
       text:        'text-purple-400',
-      badge:       'bg-purple-950/200/15 text-purple-400 border border-purple-500/20',
+      badge:       'bg-purple-500/15 text-purple-400 border border-purple-500/20',
       panelAccent: 'bg-purple-600',
     },
     outputPreview: (s) => s.messaging?.primaryHeadline ?? null,
@@ -82,7 +82,7 @@ const AGENTS: AgentConfig[] = [
       border:      'border-blue-500/40',
       glow:        'shadow-[0_0_20px_rgba(59,130,246,0.2)]',
       text:        'text-blue-400',
-      badge:       'bg-blue-950/200/15 text-blue-400 border border-blue-500/20',
+      badge:       'bg-blue-500/15 text-blue-400 border border-blue-500/20',
       panelAccent: 'bg-blue-600',
     },
     hint: 'Works best after Messaging',
@@ -102,7 +102,7 @@ const AGENTS: AgentConfig[] = [
       border:      'border-emerald-500/40',
       glow:        'shadow-[0_0_20px_rgba(16,185,129,0.2)]',
       text:        'text-emerald-400',
-      badge:       'bg-emerald-950/200/15 text-emerald-400 border border-emerald-500/20',
+      badge:       'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20',
       panelAccent: 'bg-emerald-600',
     },
     outputPreview: (s) => {
@@ -121,8 +121,8 @@ const AGENTS: AgentConfig[] = [
       border:      'border-amber-500/40',
       glow:        'shadow-[0_0_20px_rgba(245,158,11,0.2)]',
       text:        'text-amber-400',
-      badge:       'bg-amber-950/200/15 text-amber-400 border border-amber-500/20',
-      panelAccent: 'bg-amber-950/200',
+      badge:       'bg-amber-500/15 text-amber-400 border border-amber-500/20',
+      panelAccent: 'bg-amber-500',
     },
     hint: 'Run after Messaging + Copy',
     outputPreview: (s) => s.seo?.pageTitle ?? null,
@@ -137,7 +137,7 @@ const AGENTS: AgentConfig[] = [
       border:      'border-rose-500/40',
       glow:        'shadow-[0_0_20px_rgba(244,63,94,0.2)]',
       text:        'text-rose-400',
-      badge:       'bg-rose-950/200/15 text-rose-400 border border-rose-500/20',
+      badge:       'bg-rose-500/15 text-rose-400 border border-rose-500/20',
       panelAccent: 'bg-rose-600',
     },
     hint: 'Run after Messaging, Copy & Design',
@@ -149,17 +149,17 @@ const AGENTS: AgentConfig[] = [
 
 function StatusBadge({ status }: { status: AgentStatus[AgentKey] }) {
   if (status === 'running') return (
-    <span className="flex items-center gap-1 text-[11px] font-medium bg-violet-950/200/20 text-violet-300 border border-violet-500/30 px-2 py-0.5 rounded-full">
+    <span className="flex items-center gap-1 text-[11px] font-medium bg-violet-500/20 text-violet-300 border border-violet-500/30 px-2 py-0.5 rounded-full">
       <Loader2 size={9} className="animate-spin" /> Running
     </span>
   )
   if (status === 'done') return (
-    <span className="flex items-center gap-1 text-[11px] font-medium bg-green-950/200/15 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full">
+    <span className="flex items-center gap-1 text-[11px] font-medium bg-green-500/15 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full">
       <CheckCircle size={9} /> Done
     </span>
   )
   if (status === 'error') return (
-    <span className="flex items-center gap-1 text-[11px] font-medium bg-red-950/200/15 text-red-400 border border-red-500/20 px-2 py-0.5 rounded-full">
+    <span className="flex items-center gap-1 text-[11px] font-medium bg-red-500/15 text-red-400 border border-red-500/20 px-2 py-0.5 rounded-full">
       <XCircle size={9} /> Error
     </span>
   )
