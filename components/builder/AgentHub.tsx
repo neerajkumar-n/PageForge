@@ -400,7 +400,7 @@ function BuildPanel() {
 // ── Panel resolver ───────────────────────────────────────────
 
 function PanelContent({ agent, onClose }: { agent: AgentKey; onClose: () => void }) {
-  if (agent === 'research')  return <ResearchPanel />
+  if (agent === 'research')  return <ResearchPanel onClose={onClose} />
   if (agent === 'messaging') return <MessagingPanel onClose={onClose} />
   if (agent === 'copy')      return <CopyPanel />
   if (agent === 'design')    return <DesignPanel />
