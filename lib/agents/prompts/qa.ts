@@ -34,6 +34,20 @@ export const EVALUATION_CRITERIA = `
 - Are all 3 objections from the messaging brief addressed somewhere on the page?
 - Does the final CTA match the primary CTA from the messaging framework?
 
+## AEO/GEO Readiness Checklist (check each one)
+This determines how well the page will be cited by AI answer engines (ChatGPT, Perplexity, Google AI Overviews). These checks affect long-term discoverability alongside conversion.
+
+1. **Answer-first hero**: Does the hero body copy open with a direct, standalone answer to "what does this product do for me?" within the first 40–60 words?
+2. **Primary keyword placement**: Does the primary keyword (from SEO output) appear in the first 40–60 words of visible body copy?
+3. **FAQ answer structure**: Do all FAQ answers open with a direct, standalone response in the first sentence — not a hedge, not "it depends", not context-setting?
+4. **FAQ question phrasing**: Are FAQ questions phrased as natural-language queries a buyer would actually type or speak?
+5. **Paragraph length**: Are all body paragraphs ≤ 4 sentences? Flag any paragraph that is longer.
+6. **Stat/proof density**: Is there at least one specific data point, metric, or concrete proof per 150–200 words of body copy?
+7. **Entity consistency**: Is the company name, product name, and product category term used consistently throughout all sections?
+8. **FAQPage schema present**: Does the SEO output include FAQPage JSON-LD schema with all Q&A pairs extracted?
+9. **E-E-A-T signals**: Does the page include at least one credibility signal — a specific customer outcome, a verifiable metric, or a named reference?
+10. **Section visual clarity**: Are section boundaries clearly defined (distinct backgrounds, headings, clear start/end)?
+
 ## Issue Severity Guide
 - critical: Will measurably reduce conversion. Fix before launch.
 - warning: Likely reduces conversion. Fix if possible.
@@ -47,8 +61,12 @@ export const GUARDRAILS = [
   'Prioritize issues by estimated revenue impact, not personal preference.',
   'A score above 85 means the page is genuinely ready to ship — be honest about whether it is.',
   'NEVER skip any item on the CRO checklist — every item must be explicitly checked.',
+  'NEVER skip any item on the AEO/GEO checklist — AI search visibility is as important as conversion for long-term growth.',
   'NEVER deliver output without a QA report — even if everything passes.',
   'If the hero headline does not match the approved primary headline exactly, this is always a critical issue.',
+  'If FAQ answers do not open with a direct standalone response, flag as a warning — this is the single highest-impact AEO fix.',
+  'If the FAQPage schema is missing from SEO output, flag as a critical AEO issue.',
+  'If any paragraph in the page copy exceeds 4 sentences, flag as an info issue — long paragraphs reduce AI parsability.',
 ]
 
 export const OUTPUT_SCHEMA = `
@@ -66,6 +84,11 @@ interface QAOutput {
   }>
   croChecklist: Array<{
     item: string                   // checklist item description
+    pass: boolean
+    note: string                   // specific observation about this page
+  }>
+  aeoGeoChecklist: Array<{
+    item: string                   // AEO/GEO checklist item description
     pass: boolean
     note: string                   // specific observation about this page
   }>
