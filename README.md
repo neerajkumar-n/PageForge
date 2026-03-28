@@ -1,6 +1,6 @@
 # PageForge — Agentic B2B Landing Page Builder
 
-PageForge is a multi-step, AI-powered landing page builder for B2B SaaS companies. You provide your business context once. Seven specialized AI agents research, write strategy, produce copy, generate design direction, optimize for SEO/AEO/GEO, audit quality, and assemble the final page. You review and refine at structured feedback gates, then export a finished landing page in HTML, React, and Webflow JSON formats.
+PageForge is a multi-agent, AI-powered landing page builder for B2B SaaS companies. You describe your business once — six specialized AI agents research, write strategy, produce copy, generate design direction, optimize for SEO/AEO/GEO, and audit quality. You run agents independently from a central hub, review and refine at each gate, then export a production-ready landing page.
 
 ---
 
@@ -271,7 +271,7 @@ set MOCK_AGENTS=true && npm run dev
 
 **Or set it permanently** — open `.env.local`, find `MOCK_AGENTS=false`, change it to `MOCK_AGENTS=true`, save, and restart the app.
 
-Mock mode uses a pre-built dataset for a fictional AI sales forecasting product (Clairo) so every screen is populated with realistic content.
+Mock mode uses a pre-built dataset for a fictional AI sales forecasting product so every screen is populated with realistic content.
 
 ---
 
@@ -300,41 +300,46 @@ Mock mode uses a pre-built dataset for a fictional AI sales forecasting product 
 
 ---
 
-## The builder pipeline
+## How the builder works
 
-### Step 1 — Intake form
-Fill in your product details, ICP profile, competitors, primary CTA, and brand tone. This is the only form you fill out.
+### Step 1 — Intake form (`/builder/intake`)
+Fill in basic product details: company name, product description, ICP, competitors, primary CTA, and brand tone. This seeds the pipeline with a baseline context used by all agents.
 
-### Step 2 — AI agents running
-Seven agents run automatically:
-- **Research agent**: Conducts a structured conversation to gather and synthesize all business context
-- **Messaging agent**: Builds headline hierarchy, value props, positioning statement, objections, and canonical entity names
-- **Copy agent**: Writes full copy for all 8 sections using the approved messaging as a constraint, optimized for AEO/GEO
-- **Design agent**: Generates 3 distinct visual directions with palettes, typography, and layout recommendations
-- **SEO agent**: Adds metadata, schema markup, keyword strategy, and AEO/GEO readiness analysis
-- **QA agent**: Audits the assembled page against a CRO checklist and AEO/GEO checklist, scores 0–100
-- **Builder agent**: Assembles all approved outputs into HTML, React TSX, and Webflow JSON
+### Step 2 — Agent Hub (`/builder/hub`)
+The central workspace. Six agent cards — Research, Messaging, Copy, Design, SEO + AEO, and QA Audit — each open as a slide-over panel. Run them in any order. The hub shows each agent's status (Idle / Running / Done / Error) and a live preview of their output once complete.
 
-### Step 3 — Messaging review gate
-Review and edit headlines (primary + 3 alternatives), subheadline, value propositions, and CTAs inline. Every edit is logged and sent to downstream agents as style context.
+An orchestration banner at the top guides you through the recommended sequence and suggests next steps as agents complete.
 
-### Step 4 — Copy review gate
-Step through each section one at a time. Edit any field inline. Approve sections or regenerate them with updated context from your feedback.
+### The six agents
 
-### Step 5 — Design review gate
-Choose from 3 AI-generated moodboards (rendered as mini landing page previews). Drag to reorder sections. Toggle sections on/off. Pick component variants (e.g. centered vs. split hero).
+| Agent | What it does | Recommended order |
+|---|---|---|
+| **Research** | Asks up to 10 questions in one shot, browses live competitor URLs, outputs a structured research brief | Run first |
+| **Messaging** | Builds headline hierarchy, value props, positioning statement, objections | After Research |
+| **Copy** | Writes full copy for all 8 page sections, AEO/GEO-optimized | After Messaging |
+| **Design** | Generates 3 visual directions with palettes, typography, layout | Can run in parallel |
+| **SEO + AEO** | Adds meta tags, schema markup (FAQPage, HowTo), keyword strategy | After Messaging + Copy |
+| **QA Audit** | Scores 0–100 against CRO + AEO/GEO checklists, flags issues | After Messaging + Copy + Design |
 
-### Step 6 — Preview + export
-See your finished page in a live iframe (desktop/mobile toggle). View the QA score and issues. Export in three formats.
+### Research Agent — single-shot flow
+
+The Research Agent asks all its questions in **one message** (maximum 10). Answer everything in a single reply — you can paste competitor URLs directly and the agent will fetch and analyze those live pages automatically. Once you send your answers, it builds the structured research brief.
+
+If the brief doesn't appear automatically after you answer, click the **"Build Brief"** button that appears above the input box.
+
+After the brief is ready, click **"Use this research brief"** to save it — all other agents will use it automatically.
+
+### Step 3 — Build & Preview
+Once Messaging, Copy, and Design are complete, the **"Build page"** button activates at the bottom of the hub. Click it to assemble the final page and preview it at `/builder/preview` with desktop/mobile toggle and export options.
 
 ---
 
 ## Customizing agent behavior
 
-Each agent has a set of **characteristics** — persona, tone, expertise, constraints, and custom instructions — that shape its output. You can modify these in two ways:
+Each agent has a set of **characteristics** — persona, tone, expertise, constraints, and custom instructions — that shape its output.
 
 ### 1. Permanent defaults (code)
-Edit `config/ai.config.ts`. The `defaultAgentCharacteristics` object has a full configuration block for each agent:
+Edit `config/ai.config.ts`. The `defaultAgentCharacteristics` object has a full block for each agent:
 
 ```ts
 messaging: {
@@ -347,22 +352,22 @@ messaging: {
 }
 ```
 
-The `customInstructions` field is the easiest entry point — add product-specific rules, terminology requirements, or style preferences without touching the core prompt structure.
+The `customInstructions` field is the easiest entry point — add product-specific rules, banned words, or style preferences without touching the core prompt.
 
 ### 2. Per-session overrides (UI)
-In the builder, expand the **Agent Settings** panel on any page. Each agent has expandable fields for persona, tone, and custom instructions. A "Modified" badge appears when an agent has been overridden from its defaults. Use the "Reset to defaults" link to revert.
+Expand the **Agent Settings** panel in any agent's slide-over. Fields for persona, tone, and custom instructions are editable inline. A "Modified" badge appears when an agent differs from its defaults. Use "Reset to defaults" to revert.
 
-Changes made in the UI are stored in the session (localStorage) and apply to the next agent run.
+UI changes are stored in localStorage and apply to the next run of that agent.
 
-### What you can train
+### What you can configure
 
 | Field | What it controls |
 |---|---|
 | `persona` | Who the agent is — background, perspective, authority |
 | `tone` | How it communicates — register, energy, style |
 | `expertise` | What domain knowledge it draws on |
-| `constraints` | Hard rules it must never violate (brand safety, banned words, etc.) |
-| `customInstructions` | Free-form additions: product terminology, specific rules, examples |
+| `constraints` | Hard rules it must never violate (brand safety, banned words) |
+| `customInstructions` | Free-form: product terminology, specific rules, examples |
 | `temperature` | Creativity level (0 = precise, 1 = exploratory) — code only |
 
 ---
@@ -388,11 +393,22 @@ Node.js isn't installed or wasn't added to your PATH. Re-run the Node.js install
 **"command not found: git"**
 Git isn't installed. Re-run the Git install step.
 
-**App loads but agents fail with an error**
-Your API key is likely missing or incorrect. Open `.env.local` and double-check the `AI_API_KEY` value. Or switch to Mock Mode to test without a key.
+**Agents fail with "Something went wrong"**
+1. Check that your API key is correct in `.env.local`
+2. Make sure the Research Agent completed — open it, answer all 10 questions, and click **"Use this research brief"**. Other agents need that context.
+3. If you skipped Research, go to `/builder/intake` and fill in the form so agents have a baseline context.
+4. Switch to Mock Mode to confirm the UI works: `MOCK_AGENTS=true npm run dev`
+
+**Research Agent shows a response but no "research brief ready" screen**
+The agent returned a conversational reply instead of the structured brief. Click the **"Build Brief"** button that appears above the input — it prompts the agent to output the brief without you needing to re-type anything.
+
+**Messaging / Copy / other agents show "no context available"**
+Research didn't complete and no Intake Form was submitted. Either:
+- Complete the Research Agent and click "Use this research brief"
+- Or go to `/builder/intake` and fill in your product details
 
 **Port 3000 is already in use**
-Another app is running on port 3000. Either stop that app, or run PageForge on a different port:
+Another app is running on port 3000. Either stop that app, or run on a different port:
 ```bash
 # Mac
 PORT=3001 npm run dev
@@ -400,7 +416,7 @@ PORT=3001 npm run dev
 # Windows
 set PORT=3001 && npm run dev
 ```
-Then open `http://localhost:3001` instead.
+Then go to `http://localhost:3001`.
 
 **Changes I made aren't showing up**
 Stop the app (`Ctrl + C`) and restart it (`npm run dev`). Changes to `.env.local` always require a restart.
@@ -410,11 +426,10 @@ Stop the app (`Ctrl + C`) and restart it (`npm run dev`). Changes to `.env.local
 ## Tech stack
 
 - **Next.js 14** App Router + TypeScript
-- **Tailwind CSS** for styling
+- **Tailwind CSS** with dark zinc/violet design system
 - **Zustand** (localStorage persistence) for pipeline state
-- **@anthropic-ai/sdk** for AI agent calls
-- **@dnd-kit/sortable** for drag-to-reorder in the design gate
-- **framer-motion** for agent status animations
+- **@anthropic-ai/sdk** for all AI agent calls
+- **framer-motion** for animations and transitions
 - **lucide-react** for icons
 - **react-hot-toast** for notifications
 
@@ -425,30 +440,41 @@ Stop the app (`Ctrl + C`) and restart it (`npm run dev`). Changes to `.env.local
 ```
 pageforge/
 ├── config/
-│   └── ai.config.ts          ← All AI settings + agent characteristics
+│   └── ai.config.ts              ← All AI settings + agent characteristics
 ├── app/
-│   ├── page.tsx              ← Redirect to /builder/intake
+│   ├── page.tsx                  ← Redirect to /builder/intake
 │   ├── builder/
-│   │   ├── layout.tsx        ← Step progress bar + persistent chrome
-│   │   ├── intake/           ← Step 1: business context form
-│   │   ├── running/          ← Step 2: live agent status board
-│   │   ├── messaging-review/ ← Step 3: messaging feedback gate
-│   │   ├── copy-review/      ← Step 4: copy feedback gate
-│   │   ├── design-review/    ← Step 5: design feedback gate
-│   │   └── preview/          ← Step 6: live preview + export
+│   │   ├── layout.tsx            ← Glass header + step progress bar
+│   │   ├── intake/               ← Business context form (baseline context)
+│   │   ├── hub/                  ← Agent Hub — run agents independently
+│   │   ├── running/              ← Parallel agent status board (legacy flow)
+│   │   ├── messaging-review/     ← Messaging feedback gate
+│   │   ├── copy-review/          ← Copy feedback gate
+│   │   ├── design-review/        ← Design selection gate
+│   │   ├── seo-review/           ← SEO review gate
+│   │   └── preview/              ← Live preview + export
 │   └── api/
-│       ├── run-agents/       ← SSE streaming agent orchestrator
-│       └── export-page/      ← HTML / React / Webflow generator
+│       ├── research-agent/       ← Research Agent (includes live URL fetching)
+│       ├── agent-runner/         ← SSE streaming runner for all other agents
+│       └── export-page/          ← HTML / React / Webflow generator
 ├── components/
-│   ├── ui/                   ← Button, Input, Textarea, Card, Badge, Progress
-│   ├── builder/              ← StepProgress, IntakeForm, review panels, AgentSettings
-│   └── sections/             ← 8 landing page section templates with variants
+│   ├── ui/                       ← Button, Input, Textarea, Card, Badge, Progress
+│   └── builder/
+│       ├── AgentHub.tsx          ← Hub layout, agent cards, orchestration banner
+│       ├── ResearchPanel.tsx     ← Research Agent chat + brief approval UI
+│       ├── SlideOver.tsx         ← Slide-over panel container
+│       └── panels/               ← MessagingPanel, CopyPanel, DesignPanel, SEOPanel, QAPanel
 ├── lib/
-│   ├── agents/               ← research.ts, messaging.ts, copy.ts, design.ts, seo.ts, qa.ts, builder.ts
-│   │   └── prompts/          ← task prompts, guardrails, output schemas per agent
-│   ├── exporters/            ← html.ts, react.ts, webflow.ts
-│   ├── mock/                 ← fixtures.ts (realistic Clairo mock data)
-│   └── store/                ← pipeline.ts (Zustand store with all pipeline actions)
+│   ├── agents/
+│   │   ├── research.ts           ← Research agent + robust JSON extraction
+│   │   ├── messaging.ts / copy.ts / design.ts / seo.ts / qa.ts / builder.ts
+│   │   └── prompts/              ← Task prompts, guardrails, output schemas per agent
+│   ├── utils/
+│   │   └── fetchPage.ts          ← Server-side URL fetcher (strips HTML, 8k char cap)
+│   ├── hooks/
+│   │   └── useRunAgent.ts        ← SSE streaming hook used by all agent panels
+│   └── store/
+│       └── pipeline.ts           ← Zustand store (full pipeline state + localStorage)
 └── types/
-    └── index.ts              ← Every TypeScript interface
+    └── index.ts                  ← Every TypeScript interface
 ```
