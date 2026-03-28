@@ -35,11 +35,19 @@ For each section in the confirmed sectionOrder:
 
 ## Step 3 — HTML Output
 Generate a single self-contained .html file:
-- Full <!DOCTYPE html> structure
-- All meta tags and JSON-LD from the SEO Agent's headHtml in <head>
+- Full <!DOCTYPE html> structure with `lang="en"` attribute on `<html>`
+- All meta tags and JSON-LD from the SEO Agent's headHtml in `<head>` — include every tag verbatim, do not summarize or omit
 - Google Fonts import for the selected typography pair
 - CSS custom properties block defining the full palette (--color-primary, etc.)
-- All sections rendered as semantic HTML (h1, h2, p, ul, section, etc.)
+- All sections rendered as semantic HTML — use the correct elements:
+  - `<main>` wraps all page sections
+  - `<section>` with `aria-labelledby` pointing to the section's H2
+  - `<article>` for testimonials, FAQ items, and feature cards (each self-contained piece of content)
+  - `<figure>` + `<figcaption>` for screenshots, diagrams, or product visuals
+  - `<h1>` for the page headline (exactly once), `<h2>` for every section heading, `<h3>` for sub-items
+  - `<ul>` / `<li>` for feature lists and bullet points — never use `<div>` to represent lists
+- **FAQ section** must use semantic markup: each Q&A pair as an `<article>` containing a `<h3>` (the question) and a `<p>` (the answer). The first sentence of each `<p>` must be the direct standalone answer. This structure enables AI engines to extract FAQ content accurately.
+- **Hero section** body copy must place the primary keyword and core value proposition within the first visible paragraph — this is the AEO answer-first requirement.
 - Inline Tailwind via CDN for utility classes
 - No external JavaScript dependencies — must render fully without JS
 - Responsive — mobile-first, with breakpoints at 768px and 1024px
@@ -88,6 +96,12 @@ Before delivering output, run a self-check:
 - JSON-LD is valid (all brackets/braces closed)
 - HTML is valid (no unclosed tags)
 - Mobile headline is legible (H1 under 65 characters or wraps cleanly)
+- AEO: `<html lang="en">` attribute is present
+- AEO: Every `<section>` has an `aria-labelledby` pointing to its H2
+- AEO: FAQ items use `<article>` + `<h3>` + `<p>` structure (not generic divs)
+- AEO: Hero body copy includes primary keyword in the first visible paragraph
+- AEO: All lists use `<ul>`/`<li>`, not `<div>` stacks
+- AEO: FAQPage JSON-LD schema is present and includes all Q&A pairs
 
 Produce a QA report with pass/fail for each item and any auto-fixes applied.
 
@@ -111,6 +125,11 @@ export const GUARDRAILS = [
   'Include a <!-- PAGEFORGE: [section-name] --> comment before every section in the HTML output.',
   'Produce all three formats every time — never deliver only one or two.',
   'Include a CHANGELOG comment block at the top of the HTML file.',
+  'Never use <div> to represent lists — always use <ul>/<li>. AI parsers and screen readers rely on semantic list elements.',
+  'Never mark up FAQ items as generic divs — each Q&A pair must be an <article> with an <h3> question and <p> answer so AI engines can extract them as discrete answer units.',
+  'Never omit the lang="en" attribute on <html> — it is required for both accessibility and AI language model classification.',
+  'Always include aria-labelledby on every <section> pointing to its H2 — this creates the structural map AI engines use to segment page content.',
+  'Preserve approved copy verbatim — do not reword or tighten copy "for readability" in the HTML. The copy is locked.',
 ]
 
 export const OUTPUT_SCHEMA = `

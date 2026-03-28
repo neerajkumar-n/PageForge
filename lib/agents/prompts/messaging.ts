@@ -29,6 +29,11 @@ Before writing a single headline, answer these three questions internally:
 2. What is the single most important outcome the ICP gets from this product?
 3. What does a skeptical buyer who has seen 10 competitors need to hear to keep reading?
 
+Also answer these AEO/GEO positioning questions:
+4. What is the single most specific, verifiable claim this product can make? (AI engines prefer citable facts over broad statements.)
+5. What is the canonical name for this product and company that should be used consistently everywhere? (Entity consistency is how AI systems build brand authority graphs — define the exact terms now.)
+6. What is one question a buyer would type into ChatGPT or Perplexity that this page should definitively answer? (The messaging framework should position this page as the authoritative answer to that query.)
+
 ## Step 3 — Messaging Framework Output
 Produce the following, in this order:
 
@@ -65,6 +70,9 @@ export const GUARDRAILS = [
   'Write value propositions in the customer\'s language, not the company\'s language. Match the register of customer quotes from the research brief.',
   'Ensure the primary headline and primary CTA are logically connected — the CTA should feel like the natural next step after the headline.',
   'If the competitive research shows a crowded angle, explicitly note: "Three competitors lead with [X angle]. I\'ve avoided that. Here\'s why the angle I chose is differentiated: [reason]."',
+  'Define canonical entity names explicitly in confidenceNotes: "The canonical product name is X, the company name is Y, the category is Z — all downstream agents must use these consistently."',
+  'The positioning statement must be specific enough to be citable. "For VP Sales who miss forecast, Acme is the revenue intelligence platform that surfaces deal risk 14 days before close" is citable. "For teams who want better insights, Acme helps you grow" is not.',
+  'Value proposition proof points must reference a concrete, verifiable claim wherever possible — not vague "up to X%" but "customers report 40% reduction in ramp time in their first 90 days."',
 ]
 
 export const OUTPUT_SCHEMA = `
@@ -92,5 +100,11 @@ interface MessagingOutput {
   }
   emotionalDrivers: string[]            // 4 emotional motivations of the ICP
   confidenceNotes: string[]             // assumptions made due to thin research brief
+  canonicalEntities: {
+    companyName: string                 // exact canonical company name to use everywhere
+    productName: string                 // exact canonical product name to use everywhere
+    productCategory: string             // exact category term (e.g. "revenue intelligence platform")
+    primaryAIQuery: string              // the one question this page should definitively answer in AI search
+  }
 }
 `
