@@ -28,11 +28,18 @@ function buildUserPrompt(
       ? `\n\n# CONVERSATION SO FAR\n${messages.map((m) => `${m.role.toUpperCase()}: ${m.content}`).join('\n\n')}`
       : ''
 
+  // Turn 1: no messages yet — ask all questions in one shot
   if (messages.length === 0) {
-    return `Start the research conversation. Introduce yourself in one sentence, then ask the mandatory context questions.${fileSection}`
+    return `Begin Turn 1. Ask all your questions in a single message now.${fileSection}`
   }
 
-  return `Continue the research conversation based on what has been shared.${fileSection}${historySection}`
+  // Turn 2: user has replied — synthesize everything and output the JSON brief
+  const userMessages = messages.filter((m) => m.role === 'user')
+  if (userMessages.length >= 1) {
+    return `The user has answered your questions. This is Turn 2. Synthesize all information — their answers, any attached files, and any competitor page content — then output ONLY the completion JSON brief with no preamble.${fileSection}${historySection}`
+  }
+
+  return `Continue based on what has been shared.${fileSection}${historySection}`
 }
 
 /** Derive a flat BusinessContext from the richer ResearchBrief for downstream agents */
@@ -81,25 +88,28 @@ export async function runResearchAgent(
     characteristicOverrides ?? {}
   )
 
-  const lastUserMessage = messages.filter((m) => m.role === 'user').pop()
-  const userWantsToComplete =
-    lastUserMessage?.content.toLowerCase().includes('complete') ||
-    lastUserMessage?.content.toLowerCase().includes('done') ||
-    lastUserMessage?.content.toLowerCase().includes("that's all") ||
-    lastUserMessage?.content.toLowerCase().includes("that's all")
-
   if (aiConfig.mockMode) {
-    if (userWantsToComplete) {
+    // Turn 2: user has responded — output the completed brief
+    const userMessages = messages.filter((m) => m.role === 'user')
+    if (userMessages.length >= 1) {
       return { message: '', isComplete: true, output: mockResearchOutput(messages, fileContents) }
     }
-    if (messages.length === 0) {
-      return {
-        message: `Hi! I'm your Research Agent. I'll gather everything needed to build a landing page that actually converts.\n\nTo get started, I need a few things:\n\n1. **What does your company do?** (1–3 sentences in plain English)\n2. **Who is your target customer?** (role, company size, industry)\n3. **What problem does the product solve for them?**\n4. **What's the primary action you want visitors to take?** (book a demo, start a trial, etc.)`,
-        isComplete: false,
-      }
-    }
+    // Turn 1: no messages yet — ask all questions at once
     return {
-      message: `Thanks for sharing that. A few more things that will unlock sharper copy:\n\n1. Do you have any **customer quotes or testimonials** — real words from customers describing their problem or outcome?\n2. **Do you have specific numbers?** (e.g., "40% faster", "saves 6 hours/week", "3x pipeline")\n3. List **2–4 competitors**. I'll analyze their positioning so we can differentiate.\n\nAlso, do you have any **existing documentation** (product docs, sales decks, positioning guides)? If yes, please attach the file.\n\nOnce you've shared these, I'll summarize what I've gathered and confirm with you before finalizing the research brief. Type "complete" when you're ready to confirm.`,
+      message: `I need 10 quick answers to build your research brief. Answer all in one reply — you don't need to be perfect.
+
+1. **Company & product** — What does your company do and what is the product called? (1–3 sentences)
+2. **Target customer** — Who is your ideal customer? (job title, company type, company size)
+3. **Core problem** — What specific problem does your product solve for them?
+4. **Key differentiator** — What is the ONE thing that makes you different from competitors?
+5. **Proof points** — Do you have metrics or results customers have seen? (e.g., "40% faster", "saves 6 hrs/week")
+6. **Customer language** — Do you have any real quotes from customers? (paste verbatim — exact words are gold)
+7. **Competitors** — List 2–4 competitor names or URLs. (If you share URLs, I'll analyze their live sites.)
+8. **Primary CTA** — What action do you want page visitors to take? (e.g., "Book a demo", "Start free trial")
+9. **CTA destination URL** — What URL should the CTA button link to?
+10. **Brand tone** — How should the page feel? (enterprise/formal, startup/bold, technical/precise, friendly/warm)
+
+If you have product docs, a sales deck, or positioning doc — attach the file now alongside your answers.`,
       isComplete: false,
     }
   }

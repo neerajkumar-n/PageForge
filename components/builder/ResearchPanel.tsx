@@ -132,7 +132,7 @@ export function ResearchPanel() {
     return (
       <div className="max-w-3xl mx-auto flex items-center justify-center py-24 gap-3">
         <Loader2 className="animate-spin text-violet-400" size={20} />
-        <span className="text-zinc-500">Research Agent is analyzing your product...</span>
+        <span className="text-zinc-500">Loading research questions...</span>
       </div>
     )
   }
@@ -215,7 +215,7 @@ export function ResearchPanel() {
         <div>
           <h1 className="text-2xl font-bold text-zinc-100">Research Agent</h1>
           <p className="text-zinc-500 text-sm mt-1">
-            Answer a few targeted questions to unlock deeper, more specific copy and positioning.
+            Answer all 10 questions in one reply — the agent will build your research brief instantly.
           </p>
         </div>
         <button
@@ -277,7 +277,7 @@ export function ResearchPanel() {
       {fileContents.length > 0 && (
         <div className="flex gap-2 flex-wrap mb-2">
           {fileContents.map((f) => (
-            <span key={f.name} className="text-xs bg-violet-950/20 border border-indigo-200 text-violet-400 px-2 py-1 rounded-full flex items-center gap-1">
+            <span key={f.name} className="text-xs bg-violet-500/10 border border-violet-500/30 text-violet-400 px-2 py-1 rounded-full flex items-center gap-1">
               <FileText size={10} />
               {f.name}
               <button onClick={() => removeFile(f.name)} className="ml-1 hover:text-red-500">
@@ -299,7 +299,7 @@ export function ResearchPanel() {
               sendMessage(input)
             }
           }}
-          placeholder="Type your answer... (Shift+Enter for new line, Enter to send)"
+          placeholder="Answer all the questions above... (Shift+Enter for new lines, Enter to send)"
           className="w-full px-4 pt-3 pb-2 text-sm text-zinc-200 resize-none outline-none bg-transparent"
           rows={3}
           disabled={loading}
